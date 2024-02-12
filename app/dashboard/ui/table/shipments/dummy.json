@@ -1,0 +1,73 @@
+{
+  "Shipper": [
+    {
+      "name": "ABC Corporation",
+      "address": "123 Main Street, Cityville, Country",
+      "contact_info": "Phone: 123-456-7890, Email: abc@example.com",
+      "agent_iata_code": "ABC123",
+      "agent_name": "XYZ Cargo Services",
+      "agent_city": "Cityville",
+      "agent_country": "Country"
+    }
+  ],
+  "Consignee": [
+    {
+      "name": "XYZ Enterprises",
+      "address": "456 Oak Avenue, Townsville, Country",
+      "contact_info": "Phone: 987-654-3210, Email: xyz@example.com"
+    }
+  ],
+  "Flight": [
+    {
+      "flight_number": "ABC123",
+      "departure_airport": "ABC",
+      "destination_airport": "XYZ",
+      "scheduled_departure": "2024-02-11T08:00:00Z",
+      "scheduled_arrival": "2024-02-11T12:00:00Z"
+    }
+  ],
+  "HandlingInformation": [
+    {
+      "nature_of_goods": "Electronics",
+      "special_handling": "Fragile",
+      "quantity": 10,
+      "weight": 100.5,
+      "dimensions": "50x40x30",
+      "packaging": "Cartons"
+    }
+  ],
+  "Charges": [
+    {
+      "freight_charges": 500.00,
+      "other_charges": 50.00,
+      "total_charges": 550.00
+    }
+  ],
+  "ShipperDeclaration": [
+    {
+      "declaration_text": "I hereby declare that the contents of this consignment are fully and accurately described...",
+      "signature": "John Doe",
+      "date": "2024-02-11"
+    }
+  ],
+  "ConsigneeDeclaration": [
+    {
+      "declaration_text": "I hereby declare that I accept the terms and conditions provided in this Air Waybill...",
+      "signature": "Jane Doe",
+      "date": "2024-02-11"
+    }
+  ],
+  "AWB": [
+    {
+      "shipper_id": 1,
+      "consignee_id": 1,
+      "flight_id": 1,
+      "handling_id": 1,
+      "charge_id": 1,
+      "shipper_declaration_id": 1,
+      "consignee_declaration_id": 1,
+      "awb_number": "ABC123456",
+      "date_of_issue": "2024-02-11"
+    }
+  ]
+}
