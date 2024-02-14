@@ -1,6 +1,8 @@
 import React from 'react';
 import { Chip, Divider, Spacer } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
+import { FaPlaneArrival } from 'react-icons/fa';
+import { BsAirplaneEngines } from "react-icons/bs";
 
 interface ShipperCellProps {
   flightNumber: string;
@@ -8,6 +10,8 @@ interface ShipperCellProps {
   destinationAirport: string;
   scheduledDeparture: string;
   scheduledArrival: string;
+  transferAirport: string;
+  flightNumber2: string;
 
 }
 
@@ -24,7 +28,7 @@ const formatDate = (dateTimeString: string) => {
 };
 
 
-const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, departureAirport, destinationAirport, scheduledDeparture, scheduledArrival }) => {
+const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, flightNumber2, transferAirport, departureAirport, destinationAirport, scheduledDeparture, scheduledArrival }) => {
 
   const formattedScheduledDeparture = formatDate(scheduledDeparture);
   const formattedScheduledArrival = formatDate(scheduledArrival);
@@ -32,31 +36,57 @@ const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, departureAirport
   return (
     <ul>
       <li>
+        <div className="flex gap-2.5">
 
-       <span style={({ color: "violet "})} className="font-bold text-base text-lg">{flightNumber}</span>
+
+        <span className="font-bold font-mono text-lg">
+          {flightNumber}{ " " }
+          </span>
+        <span className="font-bold font-mono text-lg">
+          {flightNumber2}{ " " }
+          </span>
+
+
+
+
+
+        </div>
       </li>
       <li>
       {/* <Divider /> */}
-      <span className="text-xs font-extralight font-roboto text-base">FROM</span>
-      <Chip color="default" variant="light" size='lg' radius='sm'>
+      <Chip color="default" variant="light" size='sm' radius='sm'>
         {departureAirport}
       </Chip>
-      <span className="text-xs font-extralight font-roboto text-base">TO</span>
-      <Chip color="success" variant="light" size='lg' radius='sm'>
+      {transferAirport && (
+          <>
+            <span className="text-xs font-light font-mono text-base">/</span>
+            <span className='text-sm font-mono font-black dark:text-cyan-300/30'>{" "}{transferAirport}{" "}</span>
+
+          </>
+        )}
+      <span className="text-xs font-light font-mono text-base">/</span>
+      <Chip color="default" variant="light" size='sm' radius='sm'>
         {destinationAirport}
       </Chip>
       </li>
+      <Spacer />
+      <Divider />
+      <Spacer />
       <li>
-      <span className="text-xs font-extralight font-roboto text-base">STD:</span>
+      <span className="text-xs font-bold font-mono dark:text-cyan-700 text-cyan-800">STD:</span>
       <Chip color="default" variant="light" size='lg' radius='sm'>
-        {/* {scheduledDeparture} */}
-        {formattedScheduledDeparture}
+
+        <span className='font-mono text-sm font-light'>{formattedScheduledDeparture}</span>
       </Chip>
-      <span className="text-xs font-extralight font-roboto text-base">STA:</span>
-      <Chip color="success" variant="light" size='lg' radius='sm'>
-        {/* {scheduledArrival} */}
-        {formattedScheduledArrival}
+      </li>
+      <li>
+      <span className="text-xs font-bold font-mono dark:text-cyan-700 text-cyan-800">STA:</span>
+      <Chip color="default" variant="light" size='lg' radius='sm'>
+
+        <span className='cursor-pointer font-mono hover:font-semibold text-sm font-normal'>{formattedScheduledArrival}</span>
+
       </Chip>
+
       </li>
     </ul>
   );

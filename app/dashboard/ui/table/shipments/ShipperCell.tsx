@@ -3,30 +3,45 @@ import { Chip, Divider, Spacer } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
 
 interface ShipperCellProps {
-  name: string;
-  contact_info: string;
+  //shipper info: string;
+  shipperName: string;
+  shipperAddress: string;
+  shipperCity: string;
+  shipperZip: string;
+  shipperPhone: string;
+  //consignee info: string;
+  consigneeName: string;
+  consigneeAddress: string;
+  consigneeCity: string;
+  consigneeZip: string;
+  consigneePhone: string;
 }
 
-const ShipperCell: React.FC<ShipperCellProps> = ({ name, contact_info }) => {
+const ShipperCell: React.FC<ShipperCellProps> = ({ shipperName, shipperAddress, shipperCity, shipperZip, shipperPhone, consigneeName, consigneeAddress, consigneeCity, consigneeZip, consigneePhone}) => {
 
 
 
   return (
     <ul>
       <li>
-
-      <span className="font-light text-xs text-base">{name}</span>
+      <span className="font-light font-mono text-xs text-base">{shipperName}</span>
       </li>
+      <li>
+      <span className="font-light font-mono text-xs text-base">{shipperPhone}</span>
+      </li>
+
       <li>
       <Spacer />
       <Divider />
       <Spacer />
-      <p className="font-extralight text-base text-xs">
-        Contact:
-        <span className="font-bold text-sm font-roboto dark:text-slate-200 text-slate-800">{" "}{contact_info}</span>
-
-        </p>
       </li>
+      <li>
+      <span className="font-light text-xs text-base">{consigneeName}</span>
+      </li>
+      <li>
+      <span className="font-light text-xs text-base">{consigneePhone}</span>
+      </li>
+
     </ul>
   );
 };
