@@ -3,6 +3,8 @@ import { Roboto, Playfair_Display } from "next/font/google";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
+import { PropsWithChildren, Suspense } from 'react';
+import { Toaster } from '@/components/ui/Toasts/toaster';
 import { Providers } from "./providers";
 import clsx from "clsx";
 
@@ -55,6 +57,9 @@ export default function RootLayout({
 							{children}
 
 				</Providers>
+				<Suspense>
+          <Toaster />
+        </Suspense>
 			</body>
 		</html>
 	);

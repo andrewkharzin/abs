@@ -27,6 +27,9 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperName, shipperAddress, 
       <span className="font-light font-mono text-xs text-base">{shipperName}</span>
       </li>
       <li>
+      <span className="font-light font-mono text-xs text-base">{shipperAddress}</span>
+      </li>
+      <li>
       <span className="font-light font-mono text-xs text-base">{shipperPhone}</span>
       </li>
 
@@ -37,6 +40,9 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperName, shipperAddress, 
       </li>
       <li>
       <span className="font-light text-xs text-base">{consigneeName}</span>
+      </li>
+      <li>
+      <span className="font-light text-xs text-base">{consigneeAddress}</span>
       </li>
       <li>
       <span className="font-light text-xs text-base">{consigneePhone}</span>

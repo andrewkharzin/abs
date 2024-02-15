@@ -6,7 +6,7 @@ interface SidebarContext {
 }
 
 export const SidebarContext = createContext<SidebarContext>({
-   collapsed: false,
+   collapsed: true,
    setCollapsed: () => {},
 });
 

@@ -9,6 +9,7 @@ import { CardAgents } from "./card-agents";
 import { CardTransactions } from "./card-transactions";
 import { Link } from "@nextui-org/react";
 import NextLink from "next/link";
+import Airports from "@/app/references/airports";
 
 const Chart = dynamic(
   () => import("../charts/steam").then((mod) => mod.Steam),
@@ -45,6 +46,7 @@ export const Content = () => (
         <h3 className="text-xl font-semibold">Section</h3>
         <div className="flex flex-col justify-center gap-4 flex-wrap md:flex-nowrap md:flex-col">
           <CardAgents />
+          {/* <Airports /> */}
           <CardTransactions />
         </div>
       </div>

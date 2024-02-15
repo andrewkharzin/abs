@@ -26,15 +26,15 @@ export const Shipments = () => {
 
         <li className="flex gap-2">
           <UsersIcon />
-          <span>Shipments</span>
+          <span>Books</span>
           <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
-          <span>List</span>
+          <span className="pl-2">List</span>
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">My Shipments</h3>
+      <h3 className="text-xl font-semibold">My Books</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
           <Input

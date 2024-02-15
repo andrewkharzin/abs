@@ -3,11 +3,9 @@ import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table';
 import { Button } from "@nextui-org/button";
-import {RenderAwbCell} from "./render-cell"
-import AWBNumberCell from "./AWBNumberCell";
-import ShipperCell from "./ShipperCell";
-import ConsigneeCell from "./ConsigneeCell"
-import FlightCell from "./FlightCell";
+import AWBNumberCell from "./renders/AWBNumberCell";
+import ShipperCell from "./renders/ShipperCell";
+import BookFlightCell from "./renders/boofFlight";
 
 
 // Define the component
@@ -42,6 +40,7 @@ export default function Shipments() {
           `
           awb_prefix,
           awb_number,
+          book_type,
           flight (
             flight_number,
             departure_airport,
@@ -121,7 +120,7 @@ export default function Shipments() {
       <Table aria-label="Shipments Table">
         <TableHeader>
           {columns.map((column) => (
-            <TableColumn key={column.key} style={{ width: column.width, align: column.align, className: column.className, color: column.color }}>{column.label}</TableColumn>
+            <TableColumn key={column.key} style={{ width: column.width, color: column.color }}>{column.label}</TableColumn>
           ))}
         </TableHeader>
         <TableBody style={{ backgroundColor: 'bg-background/10' }}>
@@ -153,7 +152,7 @@ export default function Shipments() {
                      key={`${rowIndex}-flight_number`}
                   >
                     {row['flight'] ? (
-                      <FlightCell
+                      <BookFlightCell
                         flightNumber={row['flight']['flight_number']}
                         departureAirport={row['flight']['departure_airport']}
                         destinationAirport={row['flight']['destination_airport']}
@@ -161,7 +160,8 @@ export default function Shipments() {
                         scheduledArrival={row['flight']['scheduled_arrival']}
                         transferAirport={row['flight']['airport_transfer']}
                         flightNumber2={row['flight']['flight_number2']}
-                      />
+                        flightType={row['book_type']}
+                        />
                     ) : (
                       'N/A'
                     )}

@@ -1,10 +1,13 @@
 import React from 'react';
-import { Chip, Divider, Spacer } from "@nextui-org/react";
+import { Chip, Divider, Spacer, Button } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
 import { FaPlaneArrival } from 'react-icons/fa';
 import { BsAirplaneEngines } from "react-icons/bs";
+import { BiTransferAlt } from "react-icons/bi";
+import { MdFlightLand } from "react-icons/md";
+import { MdFlightTakeoff } from "react-icons/md";
 
-interface ShipperCellProps {
+interface BookFlightCellProps {
   flightNumber: string;
   departureAirport: string;
   destinationAirport: string;
@@ -12,6 +15,7 @@ interface ShipperCellProps {
   scheduledArrival: string;
   transferAirport: string;
   flightNumber2: string;
+  flightType: string;
 
 }
 
@@ -28,32 +32,32 @@ const formatDate = (dateTimeString: string) => {
 };
 
 
-const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, flightNumber2, transferAirport, departureAirport, destinationAirport, scheduledDeparture, scheduledArrival }) => {
+const BookFlightCell: React.FC<BookFlightCellProps> = ({ flightNumber, flightNumber2, transferAirport, departureAirport, destinationAirport, scheduledDeparture, scheduledArrival, flightType }) => {
 
   const formattedScheduledDeparture = formatDate(scheduledDeparture);
   const formattedScheduledArrival = formatDate(scheduledArrival);
 
   return (
     <ul>
+
       <li>
-        <div className="flex gap-2.5">
+      <div className="flex gap-2.5 mx-auto">
+        <span className="font-bold font-mono text-lg dark:text-red-600 text-slate-700">
+            {flightNumber}{" "}
+        </span>
+        <span className='mt-1'>
 
-
-        <span className="font-bold font-mono text-lg">
-          {flightNumber}{ " " }
+          {flightType === 'TRANSFER' && <BiTransferAlt size="20" color='foreground'/>}
+          {flightType === 'ONE_LEG' && <MdFlightLand size="20" color='foreground' />}
+        </span>
+        <span className="font-bold font-mono text-lg dark:text-red-600 text-slate-700">
+            {flightNumber2}{" "}
           </span>
-        <span className="font-bold font-mono text-lg">
-          {flightNumber2}{ " " }
-          </span>
-
-
-
-
-
-        </div>
+      </div>
       </li>
       <li>
-      {/* <Divider /> */}
+
+      <Spacer />
       <Chip color="default" variant="light" size='sm' radius='sm'>
         {departureAirport}
       </Chip>
@@ -70,8 +74,11 @@ const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, flightNumber2, t
       </Chip>
       </li>
       <Spacer />
-      <Divider />
       <Spacer />
+      <p className="tracking-wide font-mono  text-xs font-extralight text-slate-500">
+           {flightType}
+           {" "}| Flight
+      </p>
       <li>
       <span className="text-xs font-bold font-mono dark:text-cyan-700 text-cyan-800">STD:</span>
       <Chip color="default" variant="light" size='lg' radius='sm'>
@@ -92,4 +99,4 @@ const FlightCell: React.FC<ShipperCellProps> = ({ flightNumber, flightNumber2, t
   );
 };
 
-export default FlightCell;
+export default BookFlightCell;
