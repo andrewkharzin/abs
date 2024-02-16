@@ -6,6 +6,7 @@ import { Button } from "@nextui-org/button";
 import AWBNumberCell from "./renders/AWBNumberCell";
 import ShipperCell from "./renders/ShipperCell";
 import BookFlightCell from "./renders/boofFlight";
+import Loading from "./loading";
 
 
 // Define the component
@@ -123,7 +124,7 @@ export default function Shipments() {
             <TableColumn key={column.key} style={{ width: column.width, color: column.color }}>{column.label}</TableColumn>
           ))}
         </TableHeader>
-        <TableBody style={{ backgroundColor: 'bg-background/10' }}>
+        <TableBody>
           {awb ? (
             awb.map((row, rowIndex) => (
               <TableRow key={rowIndex} className="mx-auto py-2 dark:hover:bg-gray-700/30 hover:bg-slate-500/40">
@@ -190,20 +191,7 @@ export default function Shipments() {
                       'N/A'
                     )}
                 </TableCell>
-                {/* <TableCell
-                  key={`${rowIndex}-consignee_name`}
 
-
-                >
-                  {row['consignee'] ? (
-                      <ShipperCell
-                        name={row['consignee']['name']}
-                        contact_info={row['consignee']['contact_info']}
-                      />
-                    ) : (
-                      'N/A'
-                    )}
-                </TableCell> */}
 
               </TableRow>
             ))
@@ -211,7 +199,7 @@ export default function Shipments() {
             // Render a row with 'No data available' message if awb data is null
             <TableRow>
               {columns.map((column, index) => (
-                <TableCell key={`empty-${index}`} style={{ width: column.width, align: column.align }}>No data available</TableCell>
+                <TableCell key={`empty-${index}`} style={{ width: column.width }}><Loading /></TableCell>
               ))}
             </TableRow>
           )}
