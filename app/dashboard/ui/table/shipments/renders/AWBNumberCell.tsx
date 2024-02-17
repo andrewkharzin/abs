@@ -6,6 +6,7 @@ import { Card, CardBody, Chip, Divider, Spacer } from "@nextui-org/react";
 import {Tooltip, Button} from "@nextui-org/react";
 import {Popover, PopoverTrigger, PopoverContent} from "@nextui-org/react"
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table';
 
 interface AWBNumberCellProps {
   awbPrefix: string;
@@ -17,9 +18,11 @@ interface AWBNumberCellProps {
   bookStatus: string
   bookStatusDescription: string
   shrCode: string;
+  unNumber: number;
+  dgrClass: string;
 }
 
-const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode }) => {
+const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [backdrop, setBackdrop] = React.useState('blur')
@@ -87,9 +90,11 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col font-mono gap-1 uppercase">Nature and quantity of good</ModalHeader>
+              <ModalHeader className="text-center flex flex-col font-mono gap-1 uppercase">
+                Nature and quantity of good
+                <span className='text-center text-sm font-mono darh:text-cyan-600/30 text-cyan-700'>(Incl, Deminsions Or Volume)</span>
+                </ModalHeader>
               <ModalBody>
-                <span>(Incl, Deminsions Or Volume)</span>
               <Divider />
               <div className="flex flex-col no-wrap px-1 py-2">
                   <div>
@@ -97,7 +102,7 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
 
 
                         <li>
-                        <span className="text-lg font-mono font-normal">
+                        <span className="text-lg font-mono font-normal uppercase">
                           {natureOfGoods}
                         </span>
                         </li>
@@ -113,6 +118,29 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                         </li>
                     </ul>
                   </div>
+                  <Spacer y={2}/>
+                  <Divider />
+                  <div className='mt-5'>
+                    <div>
+                      <h4 className='text-xs font-mono text-base font-extralight antialiased tracking-widest'>DANREGEOUS GOODS REGULATIONS</h4>
+                        <Spacer y={2}/>
+                        <p className="text-sm font-mono font-light">
+                        UN: {" "}
+                        <span className="text-sm font-mono font-bold text-red-700">
+                        00{unNumber}
+                        </span>
+                        </p>
+                    </div>
+                    <Spacer y={2}/>
+                    <div>
+                        <p className="text-sm font-mono font-light">
+                        CLASS: {" "}
+                        <span className="text-sm font-mono font-bold text-red-700">
+                        {dgrClass}
+                        </span>
+                        </p>
+                    </div>
+                   </div>
                 </div>
 
 
@@ -141,12 +169,14 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
         </PopoverTrigger>
         <PopoverContent>
           {(titleProps) => (
-            <div className="px-1 py-2">
+            <><div className="px-1 py-2">
               <p className="text-sm font-mono font-light uppercase" {...titleProps}>
-                {bookStatusDescription}
+              {bookStatusDescription}
               </p>
 
-            </div>
+              </div>
+
+              </>
           )}
         </PopoverContent>
       </Popover>
@@ -161,3 +191,5 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
 };
 
 export default AWBNumberCell;
+
+

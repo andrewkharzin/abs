@@ -42,6 +42,25 @@ export default function Shipments() {
           awb_prefix,
           awb_number,
           book_type,
+          awb_cargo_details (
+            nature_of_goods,
+            number_of_pieces,
+            gross_weight,
+            volume,
+          ),
+          shc (
+            code,
+            description
+          ),
+          flights (
+            flight_number,
+            departure_airport,
+            destination_airport,
+            scheduled_departure,
+            scheduled_arrival,
+            airport_transfer,
+            flight_number2
+             ),
           bookstatus ( status, description ),
           shippers (
             fido,
@@ -56,26 +75,7 @@ export default function Shipments() {
             city,
             zip,
             phone
-          ),
-          dgr_classes ( un_number, class_devision ),
-          flights (
-            flight_number,
-            departure_airport,
-            destination_airport,
-            scheduled_departure,
-            scheduled_arrival,
-            airport_transfer,
-            flight_number2
-          ),
-          shc ( code, description ),
-          awb_details (
-            id,
-            proper_name,
-            number_of_pieces,
-            gross_weight,
-            volume
           )
-
 
           `
         ).range(currentPage * 10, (currentPage + 1) * 10 - 1);
@@ -137,15 +137,13 @@ export default function Shipments() {
                       <AWBNumberCell
                         awbPrefix={row['awb_prefix']}
                         awbNumber={row['awb_number']}
-                        natureOfGoods={row['awb_details'] ? row['awb_details']['proper_name'] || 'N/A' : 'N/A'}
-                        quantity={row['awb_details'] ? row['awb_details']['number_of_pieces'] || 'N/A' : 'N/A'}
-                        weight={row['awb_details'] ? row['awb_details']['gross_weight'] || 'N/A' : 'N/A'}
-                        volume={row['awb_details'] ? row['awb_details']['volume'] || 'N/A' : 'N/A'}
+                        natureOfGoods={row['awb_cargo_details'] ? row['awb_cargo_details']['nature_of_goods'] || 'N/A' : 'N/A'}
+                        quantity={row['awb_cargo_details'] ? row['awb_cargo_details']['number_of_pieces'] || 'N/A' : 'N/A'}
+                        weight={row['awb_cargo_details'] ? row['awb_cargo_details']['gross_weight'] || 'N/A' : 'N/A'}
+                        volume={row['awb_cargo_details'] ? row['awb_cargo_details']['volume'] || 'N/A' : 'N/A'}
                         bookStatus={row['bookstatus']['status']}
                         bookStatusDescription={row['bookstatus']['description']}
                         shrCode={row['shc']['code']}
-                        unNumber={row['dgr_classes']['un_number']}
-                        dgrClass={row['dgr_classes']['class_devision']}
                       />
                     ) : (
                       'N/A'
@@ -154,7 +152,7 @@ export default function Shipments() {
                   <TableCell
                      key={`${rowIndex}-flight_number`}
                   >
-                    {row['flights'] ? (
+                    {row['flight'] ? (
                       <BookFlightCell
                         flightNumber={row['flights']['flight_number']}
                         departureAirport={row['flights']['departure_airport']}

@@ -36,7 +36,7 @@ export default function Loading() {
         </TableColumn>
         <TableColumn>
         <Skeleton className="rounded-lg">
-         <div className="h-6 rounded-lg bg-default-300"></div>
+         <div className="h-6n rounded-lg bg-default-300"></div>
        </Skeleton>
         </TableColumn>
       </TableHeader>
