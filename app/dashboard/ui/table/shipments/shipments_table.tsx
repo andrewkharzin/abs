@@ -57,7 +57,7 @@ export default function Shipments() {
             zip,
             phone
           ),
-          dgr_classes ( un_number, class_devision ),
+          dgr_classes ( un_number, class_devision, sub_risk, un_packing_group, name_description ),
           flights (
             flight_number,
             departure_airport,
@@ -146,6 +146,9 @@ export default function Shipments() {
                         shrCode={row['shc']['code']}
                         unNumber={row['dgr_classes']['un_number']}
                         dgrClass={row['dgr_classes']['class_devision']}
+                        subRisk={row['dgr_classes']['sub_risk']}
+                        packGroup={row['dgr_classes']['un_packing_group']}
+                        nameDescription={row['dgr_classes']['name_description']}
                       />
                     ) : (
                       'N/A'

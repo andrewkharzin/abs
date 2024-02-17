@@ -20,9 +20,12 @@ interface AWBNumberCellProps {
   shrCode: string;
   unNumber: number;
   dgrClass: string;
+  subRisk: string;
+  packGroup: string;
+  nameDescription: string;
 }
 
-const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass }) => {
+const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass, subRisk, packGroup, nameDescription }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [backdrop, setBackdrop] = React.useState('blur')
@@ -90,9 +93,9 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="text-center flex flex-col font-mono gap-1 uppercase">
+              <ModalHeader className="text-left flex flex-col font-mono gap-1 uppercase">
                 Nature and quantity of good
-                <span className='text-center text-sm font-mono darh:text-cyan-600/30 text-cyan-700'>(Incl, Deminsions Or Volume)</span>
+                <span className='text-left text-sm font-mono darh:text-cyan-600/30 text-cyan-700'>(Incl, Deminsions Or Volume)</span>
                 </ModalHeader>
               <ModalBody>
               <Divider />
@@ -124,6 +127,8 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                     <div>
                       <h4 className='text-xs font-mono text-base font-extralight antialiased tracking-widest'>DANREGEOUS GOODS REGULATIONS</h4>
                         <Spacer y={2}/>
+                        <span className='font-mono bg-pink-500/50 font-extralight text-base'>{nameDescription}</span>
+                        <Spacer y={2}/>
                         <p className="text-sm font-mono font-light">
                         UN: {" "}
                         <span className="text-sm font-mono font-bold text-red-700">
@@ -140,6 +145,23 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                         </span>
                         </p>
                     </div>
+                    <Spacer y={2}/>
+                    <div>
+                        <p className="text-sm font-mono font-light">
+                        SUB RISK: {" "}
+                        <span className="text-sm font-mono font-bold text-red-700">
+                        {subRisk} PACK GROUP: {" "}   {packGroup}
+                        </span>
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-mono font-light">
+                        PACK GROUP: {" "}
+                        <span className="text-sm font-mono font-bold text-red-700">
+                        {packGroup}
+                        </span>
+                        </p>
+                    </div>
                    </div>
                 </div>
 
@@ -147,7 +169,7 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
 
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="primary" variant="light" onPress={onClose}>
                   Close
                 </Button>
               </ModalFooter>
