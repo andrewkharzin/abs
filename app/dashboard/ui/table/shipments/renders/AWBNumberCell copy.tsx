@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
 import React from 'react';
-import {Image} from "@nextui-org/react";
 import { FaPlaneArrival } from 'react-icons/fa';
 import { Card, CardBody, Chip, Divider, Spacer } from "@nextui-org/react";
 import {Tooltip, Button} from "@nextui-org/react";
@@ -24,10 +23,9 @@ interface AWBNumberCellProps {
   subRisk: string;
   packGroup: string;
   nameDescription: string;
-  dgrClassLabel: string;
 }
 
-const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass, subRisk, packGroup, nameDescription, dgrClassLabel }) => {
+const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass, subRisk, packGroup, nameDescription }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [backdrop, setBackdrop] = React.useState('blur')
@@ -101,45 +99,33 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                 </ModalHeader>
               <ModalBody>
               <Divider />
-                <div className="flex">
+              <div className="flex flex-col no-wrap px-1 py-2">
                   <div>
                     <ul>
 
 
-                      <li>
-                      <span className="text-lg font-mono font-normal uppercase">
-                        {natureOfGoods}
-                      </span>
-                      </li>
-                      <Spacer />
-                      <li>
-                      <span className="text-sm font-light font-mono font-normal">
-                        {quantity} pcs
-                      </span>
-                      { " " } / { " " }
-                      <span className="text-sm font-bold font-mono font-normal">
-                        {weight} kgs
-                      </span>
-                      </li>
+                        <li>
+                        <span className="text-lg font-mono font-normal uppercase">
+                          {natureOfGoods}
+                        </span>
+                        </li>
+                        <Spacer />
+                        <li>
+                        <span className="text-sm font-light font-mono font-normal">
+                          {quantity} pcs
+                        </span>
+                        { " " } / { " " }
+                        <span className="text-sm font-bold font-mono font-normal">
+                          {weight} kgs
+                        </span>
+                        </li>
                     </ul>
                   </div>
-
-                </div>
-                <Spacer y={2}/>
-                <Divider />
-                <div className="grid grid-cols-3 gap-4">
-                  <div className='col-span-2'>
-
-                    <h4 className='text-xs font-mono text-base font-extralight antialiased tracking-widest'>DANREGEOUS GOODS REGULATIONS</h4>
-                  </div>
-                  <div>
-                  <h4 className='text-xs font-mono text-base font-extralight antialiased tracking-widest'>HAZARD LABEL</h4>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="grid grid-cols-3 gap-4">
-                      <div className='col-span-2'>
-
+                  <Spacer y={2}/>
+                  <Divider />
+                  <div className='mt-5'>
+                    <div>
+                      <h4 className='text-xs font-mono text-base font-extralight antialiased tracking-widest'>DANREGEOUS GOODS REGULATIONS</h4>
                         <Spacer y={2}/>
                         <span className='font-mono bg-pink-500/50 font-extralight text-base'>{nameDescription}</span>
                         <Spacer y={2}/>
@@ -149,49 +135,35 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                         00{unNumber}
                         </span>
                         </p>
-                        <Spacer y={2}/>
+                    </div>
+                    <Spacer y={2}/>
+                    <div>
                         <p className="text-sm font-mono font-light">
                         CLASS: {" "}
                         <span className="text-sm font-mono font-bold text-red-700">
                         {dgrClass}
                         </span>
                         </p>
-                        <Spacer y={2}/>
+                    </div>
+                    <Spacer y={2}/>
+                    <div>
                         <p className="text-sm font-mono font-light">
                         SUB RISK: {" "}
                         <span className="text-sm font-mono font-bold text-red-700">
                         {subRisk}
                         </span>
                         </p>
-                       <Spacer y={2} />
+                    </div>
+                    <Spacer y={2} />
+                    <div>
                         <p className="text-sm font-mono font-light">
                         PACK GROUP: {" "}
                         <span className="text-sm font-mono font-bold text-red-700">
                         {packGroup}
                         </span>
                         </p>
-
-                      </div>
-
-                      <div>
-
-                      <Spacer y={2} />
-                      <Image
-
-                          isBlurred
-                          width={80}
-                          src={dgrClassLabel}
-                          alt="NextUI Album Cover"
-                          classNames="m-5"
-                        />
-                      </div>
-
-
-
-
-
-                  </div>
-
+                    </div>
+                   </div>
                 </div>
 
 

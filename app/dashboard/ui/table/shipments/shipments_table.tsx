@@ -57,25 +57,15 @@ export default function Shipments() {
             zip,
             phone
           ),
-          dgr_classes ( un_number, class_devision, sub_risk, un_packing_group, name_description ),
-          flights (
-            flight_number,
-            departure_airport,
-            destination_airport,
-            scheduled_departure,
-            scheduled_arrival,
-            airport_transfer,
-            flight_number2
-          ),
-          shc ( code, description ),
-          awb_details (
-            id,
+          shipments (
             proper_name,
             number_of_pieces,
             gross_weight,
-            volume
+            volume,
+            shc ( code, description ),
+            dgr_classes ( icao_class, iata_code, description, examples, emergency_actions, label ),
+            dgr_un_list ( un_number, name_description, class_devision, sub_risk, un_packing_group)
           )
-
 
           `
         ).range(currentPage * 10, (currentPage + 1) * 10 - 1);
@@ -137,18 +127,19 @@ export default function Shipments() {
                       <AWBNumberCell
                         awbPrefix={row['awb_prefix']}
                         awbNumber={row['awb_number']}
-                        natureOfGoods={row['awb_details'] ? row['awb_details']['proper_name'] || 'N/A' : 'N/A'}
-                        quantity={row['awb_details'] ? row['awb_details']['number_of_pieces'] || 'N/A' : 'N/A'}
-                        weight={row['awb_details'] ? row['awb_details']['gross_weight'] || 'N/A' : 'N/A'}
-                        volume={row['awb_details'] ? row['awb_details']['volume'] || 'N/A' : 'N/A'}
+                        natureOfGoods={row['shipments'] ? row['shipments']['proper_name'] || 'N/A' : 'N/A'}
+                        quantity={row['shipments'] ? row['shipments']['number_of_pieces'] || 'N/A' : 'N/A'}
+                        weight={row['shipments'] ? row['shipments']['gross_weight'] || 'N/A' : 'N/A'}
+                        volume={row['shipments'] ? row['shipments']['volume'] || 'N/A' : 'N/A'}
                         bookStatus={row['bookstatus']['status']}
                         bookStatusDescription={row['bookstatus']['description']}
-                        shrCode={row['shc']['code']}
-                        unNumber={row['dgr_classes']['un_number']}
-                        dgrClass={row['dgr_classes']['class_devision']}
-                        subRisk={row['dgr_classes']['sub_risk']}
-                        packGroup={row['dgr_classes']['un_packing_group']}
-                        nameDescription={row['dgr_classes']['name_description']}
+                        shrCode={row['shipments']['shc']['code']}
+                        unNumber={row['shipments']['dgr_un_list']['un_number']}
+                        dgrClass={row['shipments']['dgr_un_list']['class_devision']}
+                        subRisk={row['shipments']['dgr_un_list']['sub_risk']}
+                        packGroup={row['shipments']['dgr_un_list']['un_packing_group']}
+                        nameDescription={row['shipments']['dgr_un_list']['name_description']}
+                        dgrClassLabel={row['shipments']['dgr_classes']['label']}
                       />
                     ) : (
                       'N/A'
