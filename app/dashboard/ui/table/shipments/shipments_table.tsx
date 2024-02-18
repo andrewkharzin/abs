@@ -65,6 +65,15 @@ export default function Shipments() {
             shc ( code, description ),
             dgr_classes ( icao_class, iata_code, description, examples, emergency_actions, label ),
             dgr_un_list ( un_number, name_description, class_devision, sub_risk, un_packing_group)
+          ),
+          flights (
+            flight_number,
+            departure_airport,
+            destination_airport,
+            scheduled_departure,
+            scheduled_arrival,
+            airport_transfer,
+            flight_number2
           )
 
           `
@@ -140,6 +149,7 @@ export default function Shipments() {
                         packGroup={row['shipments']['dgr_un_list']['un_packing_group']}
                         nameDescription={row['shipments']['dgr_un_list']['name_description']}
                         dgrClassLabel={row['shipments']['dgr_classes']['label']}
+                        dgrEmergencyActions={row['shipments']['dgr_classes']['emergency_actions']}
                       />
                     ) : (
                       'N/A'

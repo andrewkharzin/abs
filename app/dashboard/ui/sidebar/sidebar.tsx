@@ -89,8 +89,8 @@ export const SidebarWrapper = () => {
                 icon={<DevIcon />}
               />
               <SidebarItem
-                isActive={pathname === "/view"}
-                title="View Test Data"
+                isActive={pathname === "/notes"}
+                title="Notes"
                 icon={<ViewIcon />}
               />
               <SidebarItem

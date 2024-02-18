@@ -8,6 +8,7 @@ import {Tooltip, Button} from "@nextui-org/react";
 import {Popover, PopoverTrigger, PopoverContent} from "@nextui-org/react"
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table';
+import {Accordion, AccordionItem} from "@nextui-org/react";
 
 interface AWBNumberCellProps {
   awbPrefix: string;
@@ -25,9 +26,10 @@ interface AWBNumberCellProps {
   packGroup: string;
   nameDescription: string;
   dgrClassLabel: string;
+  dgrEmergencyActions: string;
 }
 
-const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass, subRisk, packGroup, nameDescription, dgrClassLabel }) => {
+const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, natureOfGoods, quantity, weight, volume, bookStatus, bookStatusDescription, shrCode, unNumber, dgrClass, subRisk, packGroup, nameDescription, dgrClassLabel, dgrEmergencyActions }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [backdrop, setBackdrop] = React.useState('blur')
@@ -59,7 +61,21 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
       <span className="font-bold dark:text-cyan-600 text-cyan-800 dark:hover:text-cyan-400 hover:text-red-700">{awbPrefix}</span>
       </Chip>
       <span style={({color: "foreground"})} className="font-bold font-mono tracking-widest text-lg">{" "}-{" "}{awbNumber}</span>
-      <span className='text-lg font-mono font-bold text-red-600'>{shrCode}</span>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+
+         <span className='text-lg font-mono font-bold text-red-600'>{shrCode}</span>
+
+        </div>
+        <div className='my-1'>
+        <Image
+              radius='none'
+              width={20}
+              src={dgrClassLabel}
+              alt="Hazard Class"
+              />
+        </div>
+      </div>
 
       </div>
 
@@ -170,7 +186,10 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
                         {packGroup}
                         </span>
                         </p>
+                        <Spacer y={4} />
 
+                        <h4 className='text-md font-mono text-pink-600 font-bold antialiased tracking-widest'>EMERGENCY ACTIONS</h4>
+                        <p className='mt-5 font-mono font-normal text-md text-base'>{dgrEmergencyActions}</p>
                       </div>
 
                       <div>
@@ -210,7 +229,7 @@ const AWBNumberCell: React.FC<AWBNumberCellProps> = ({ awbPrefix, awbNumber, nat
       <li>
 
       <Spacer y={2} />
-      <span className="text-xs font-bold font-mono dark:text-cyan-700 text-cyan-800">STATUS:</span>
+      <span className="text-sm font-bold font-mono dark:text-cyan-600 text-cyan-800">STATUS:</span>
       <Popover placement="right">
         <PopoverTrigger>
           <Chip color="default" variant="light" size='sm' radius='sm'>
