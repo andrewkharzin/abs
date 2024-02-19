@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import 'react-quill/dist/quill.snow.css'
 import { Roboto, Playfair_Display } from "next/font/google";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";

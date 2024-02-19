@@ -9,288 +9,509 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      awb: {
+      airports: {
         Row: {
-          awb_id: number
-          awb_number: string
-          charge_id: number | null
-          consignee_declaration_id: number | null
-          consignee_id: number | null
-          date_of_issue: string | null
-          flight_id: number | null
-          handling_id: number | null
-          shipper_declaration_id: number | null
-          shipper_id: number | null
+          cntr_code: string | null
+          iata: string | null
+          id: number
+          name: string | null
         }
         Insert: {
-          awb_id?: number
-          awb_number: string
-          charge_id?: number | null
-          consignee_declaration_id?: number | null
-          consignee_id?: number | null
-          date_of_issue?: string | null
-          flight_id?: number | null
-          handling_id?: number | null
-          shipper_declaration_id?: number | null
-          shipper_id?: number | null
+          cntr_code?: string | null
+          iata?: string | null
+          id?: number
+          name?: string | null
         }
         Update: {
-          awb_id?: number
+          cntr_code?: string | null
+          iata?: string | null
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
+      }
+      awbs: {
+        Row: {
+          awb_number: string
+          awb_prefix: string
+          book_type: Database["public"]["Enums"]["book_type"] | null
+          consignee_id: string | null
+          date_created: string | null
+          flight_id: string | null
+          id: string
+          shipment_id: string | null
+          shipper_id: string | null
+          status: string | null
+        }
+        Insert: {
+          awb_number: string
+          awb_prefix: string
+          book_type?: Database["public"]["Enums"]["book_type"] | null
+          consignee_id?: string | null
+          date_created?: string | null
+          flight_id?: string | null
+          id?: string
+          shipment_id?: string | null
+          shipper_id?: string | null
+          status?: string | null
+        }
+        Update: {
           awb_number?: string
-          charge_id?: number | null
-          consignee_declaration_id?: number | null
-          consignee_id?: number | null
-          date_of_issue?: string | null
-          flight_id?: number | null
-          handling_id?: number | null
-          shipper_declaration_id?: number | null
-          shipper_id?: number | null
+          awb_prefix?: string
+          book_type?: Database["public"]["Enums"]["book_type"] | null
+          consignee_id?: string | null
+          date_created?: string | null
+          flight_id?: string | null
+          id?: string
+          shipment_id?: string | null
+          shipper_id?: string | null
+          status?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "awb_charge_id_fkey"
-            columns: ["charge_id"]
-            isOneToOne: false
-            referencedRelation: "charges"
-            referencedColumns: ["charge_id"]
-          },
-          {
-            foreignKeyName: "awb_consignee_declaration_id_fkey"
-            columns: ["consignee_declaration_id"]
-            isOneToOne: false
-            referencedRelation: "consigneedeclaration"
-            referencedColumns: ["declaration_id"]
-          },
-          {
-            foreignKeyName: "awb_consignee_id_fkey"
-            columns: ["consignee_id"]
-            isOneToOne: false
-            referencedRelation: "consignee"
-            referencedColumns: ["consignee_id"]
-          },
-          {
-            foreignKeyName: "awb_flight_id_fkey"
-            columns: ["flight_id"]
-            isOneToOne: false
-            referencedRelation: "flight"
-            referencedColumns: ["flight_id"]
-          },
-          {
-            foreignKeyName: "awb_handling_id_fkey"
-            columns: ["handling_id"]
-            isOneToOne: false
-            referencedRelation: "handlinginformation"
-            referencedColumns: ["handling_id"]
-          },
-          {
-            foreignKeyName: "awb_shipper_declaration_id_fkey"
-            columns: ["shipper_declaration_id"]
-            isOneToOne: false
-            referencedRelation: "shipperdeclaration"
-            referencedColumns: ["declaration_id"]
-          },
-          {
-            foreignKeyName: "awb_shipper_id_fkey"
+            foreignKeyName: "public_awb_shipper_id_fkey"
             columns: ["shipper_id"]
             isOneToOne: false
-            referencedRelation: "shipper"
-            referencedColumns: ["shipper_id"]
+            referencedRelation: "shippers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_awbs_consignee_id_fkey"
+            columns: ["consignee_id"]
+            isOneToOne: false
+            referencedRelation: "consignees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_awbs_flight_id_fkey"
+            columns: ["flight_id"]
+            isOneToOne: false
+            referencedRelation: "flights"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_awbs_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_awbs_status_fkey"
+            columns: ["status"]
+            isOneToOne: false
+            referencedRelation: "bookstatus"
+            referencedColumns: ["id"]
           }
         ]
       }
+      bookstatus: {
+        Row: {
+          description: string | null
+          id: string
+          status: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          status?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       charges: {
         Row: {
-          charge_id: number
           freight_charges: number | null
+          id: string
           other_charges: number | null
           total_charges: number | null
         }
         Insert: {
-          charge_id?: number
           freight_charges?: number | null
+          id?: string
           other_charges?: number | null
           total_charges?: number | null
         }
         Update: {
-          charge_id?: number
           freight_charges?: number | null
+          id?: string
           other_charges?: number | null
           total_charges?: number | null
         }
         Relationships: []
       }
-      consignee: {
-        Row: {
-          address: string
-          consignee_id: number
-          contact_info: string | null
-          name: string
-        }
-        Insert: {
-          address: string
-          consignee_id?: number
-          contact_info?: string | null
-          name: string
-        }
-        Update: {
-          address?: string
-          consignee_id?: number
-          contact_info?: string | null
-          name?: string
-        }
-        Relationships: []
-      }
-      consigneedeclaration: {
+      consignee_declaration: {
         Row: {
           consignee_id: number | null
           date: string | null
-          declaration_id: number
           declaration_text: string | null
+          id: string
           signature: string | null
         }
         Insert: {
           consignee_id?: number | null
           date?: string | null
-          declaration_id?: number
           declaration_text?: string | null
+          id?: string
           signature?: string | null
         }
         Update: {
           consignee_id?: number | null
           date?: string | null
-          declaration_id?: number
           declaration_text?: string | null
+          id?: string
           signature?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "consigneedeclaration_consignee_id_fkey"
-            columns: ["consignee_id"]
-            isOneToOne: false
-            referencedRelation: "consignee"
-            referencedColumns: ["consignee_id"]
-          }
-        ]
+        Relationships: []
       }
-      flight: {
+      consignees: {
         Row: {
+          account_number: string | null
+          address: string | null
+          city: string | null
+          fido: string
+          id: string
+          phone: string | null
+          state: string | null
+          zip: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          address?: string | null
+          city?: string | null
+          fido?: string
+          id?: string
+          phone?: string | null
+          state?: string | null
+          zip?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          address?: string | null
+          city?: string | null
+          fido?: string
+          id?: string
+          phone?: string | null
+          state?: string | null
+          zip?: string | null
+        }
+        Relationships: []
+      }
+      dgr_classes: {
+        Row: {
+          description: string | null
+          emergency_actions: string | null
+          examples: string | null
+          iata_code: string | null
+          icao_class: string | null
+          id: string
+          label: string | null
+          label_link: string | null
+          un_id: string | null
+        }
+        Insert: {
+          description?: string | null
+          emergency_actions?: string | null
+          examples?: string | null
+          iata_code?: string | null
+          icao_class?: string | null
+          id?: string
+          label?: string | null
+          label_link?: string | null
+          un_id?: string | null
+        }
+        Update: {
+          description?: string | null
+          emergency_actions?: string | null
+          examples?: string | null
+          iata_code?: string | null
+          icao_class?: string | null
+          id?: string
+          label?: string | null
+          label_link?: string | null
+          un_id?: string | null
+        }
+        Relationships: []
+      }
+      dgr_un_list: {
+        Row: {
+          class_devision: string | null
+          dgr_class_link: string | null
+          drg_id: string | null
+          excepted_qnty: string | null
+          id: string
+          limited_quantities: string | null
+          name_description: string | null
+          special_provision: string | null
+          sub_risk: string | null
+          un_number: number | null
+          un_packing_group: string | null
+        }
+        Insert: {
+          class_devision?: string | null
+          dgr_class_link?: string | null
+          drg_id?: string | null
+          excepted_qnty?: string | null
+          id?: string
+          limited_quantities?: string | null
+          name_description?: string | null
+          special_provision?: string | null
+          sub_risk?: string | null
+          un_number?: number | null
+          un_packing_group?: string | null
+        }
+        Update: {
+          class_devision?: string | null
+          dgr_class_link?: string | null
+          drg_id?: string | null
+          excepted_qnty?: string | null
+          id?: string
+          limited_quantities?: string | null
+          name_description?: string | null
+          special_provision?: string | null
+          sub_risk?: string | null
+          un_number?: number | null
+          un_packing_group?: string | null
+        }
+        Relationships: []
+      }
+      flights: {
+        Row: {
+          airport_transfer: string | null
           departure_airport: string
           destination_airport: string
-          flight_id: number
           flight_number: string
+          flight_number2: string | null
+          id: string
           scheduled_arrival: string | null
           scheduled_departure: string | null
         }
         Insert: {
+          airport_transfer?: string | null
           departure_airport: string
           destination_airport: string
-          flight_id?: number
           flight_number: string
+          flight_number2?: string | null
+          id?: string
           scheduled_arrival?: string | null
           scheduled_departure?: string | null
         }
         Update: {
+          airport_transfer?: string | null
           departure_airport?: string
           destination_airport?: string
-          flight_id?: number
           flight_number?: string
+          flight_number2?: string | null
+          id?: string
           scheduled_arrival?: string | null
           scheduled_departure?: string | null
         }
         Relationships: []
       }
-      handlinginformation: {
+      profiles: {
         Row: {
-          dimensions: string | null
-          handling_id: number
-          nature_of_goods: string | null
-          packaging: string | null
-          quantity: number | null
-          special_handling: string | null
-          weight: number | null
+          avatar_url: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+          username: string | null
+          website: string | null
         }
         Insert: {
-          dimensions?: string | null
-          handling_id?: number
-          nature_of_goods?: string | null
-          packaging?: string | null
-          quantity?: number | null
-          special_handling?: string | null
-          weight?: number | null
+          avatar_url?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
         }
         Update: {
-          dimensions?: string | null
-          handling_id?: number
-          nature_of_goods?: string | null
-          packaging?: string | null
-          quantity?: number | null
-          special_handling?: string | null
-          weight?: number | null
+          avatar_url?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      shc: {
+        Row: {
+          code: string | null
+          description: string | null
+          id: string
+        }
+        Insert: {
+          code?: string | null
+          description?: string | null
+          id?: string
+        }
+        Update: {
+          code?: string | null
+          description?: string | null
+          id?: string
         }
         Relationships: []
       }
-      shipper: {
+      shipments: {
         Row: {
-          address: string
-          agent_city: string | null
-          agent_country: string | null
-          agent_iata_code: string | null
-          agent_name: string | null
-          contact_info: string | null
-          name: string
-          shipper_id: number
+          dgr_id: string | null
+          gross_weight: string | null
+          id: string
+          number_of_pieces: number | null
+          proper_name: string
+          shc_id: string | null
+          un_id: string | null
+          volume: string | null
         }
         Insert: {
-          address: string
-          agent_city?: string | null
-          agent_country?: string | null
-          agent_iata_code?: string | null
-          agent_name?: string | null
-          contact_info?: string | null
-          name: string
-          shipper_id?: number
+          dgr_id?: string | null
+          gross_weight?: string | null
+          id?: string
+          number_of_pieces?: number | null
+          proper_name?: string
+          shc_id?: string | null
+          un_id?: string | null
+          volume?: string | null
         }
         Update: {
-          address?: string
-          agent_city?: string | null
-          agent_country?: string | null
-          agent_iata_code?: string | null
-          agent_name?: string | null
-          contact_info?: string | null
-          name?: string
-          shipper_id?: number
+          dgr_id?: string | null
+          gross_weight?: string | null
+          id?: string
+          number_of_pieces?: number | null
+          proper_name?: string
+          shc_id?: string | null
+          un_id?: string | null
+          volume?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_shipments_dgr_id_fkey"
+            columns: ["dgr_id"]
+            isOneToOne: false
+            referencedRelation: "dgr_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_shipments_shc_id_fkey"
+            columns: ["shc_id"]
+            isOneToOne: false
+            referencedRelation: "shc"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_shipments_un_id_fkey"
+            columns: ["un_id"]
+            isOneToOne: false
+            referencedRelation: "dgr_un_list"
+            referencedColumns: ["id"]
+          }
+        ]
       }
-      shipperdeclaration: {
+      shipper_declaration: {
         Row: {
           date: string | null
-          declaration_id: number
           declaration_text: string | null
-          shipper_id: number | null
+          id: string
           signature: string | null
         }
         Insert: {
           date?: string | null
-          declaration_id?: number
           declaration_text?: string | null
-          shipper_id?: number | null
+          id: string
           signature?: string | null
         }
         Update: {
           date?: string | null
-          declaration_id?: number
           declaration_text?: string | null
-          shipper_id?: number | null
+          id?: string
           signature?: string | null
+        }
+        Relationships: []
+      }
+      shippers: {
+        Row: {
+          account_number: string | null
+          address: string | null
+          city: string | null
+          fido: string
+          id: string
+          phone: string | null
+          state: string | null
+          zip: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          address?: string | null
+          city?: string | null
+          fido?: string
+          id?: string
+          phone?: string | null
+          state?: string | null
+          zip?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          address?: string | null
+          city?: string | null
+          fido?: string
+          id?: string
+          phone?: string | null
+          state?: string | null
+          zip?: string | null
+        }
+        Relationships: []
+      }
+      todos: {
+        Row: {
+          category: Database["public"]["Enums"]["note_category"] | null
+          content: string | null
+          id: number
+          inserted_at: string
+          is_complete: boolean | null
+          tags: string | null
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["note_category"] | null
+          content?: string | null
+          id?: number
+          inserted_at?: string
+          is_complete?: boolean | null
+          tags?: string | null
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["note_category"] | null
+          content?: string | null
+          id?: number
+          inserted_at?: string
+          is_complete?: boolean | null
+          tags?: string | null
+          title?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "shipperdeclaration_shipper_id_fkey"
-            columns: ["shipper_id"]
+            foreignKeyName: "todos_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "shipper"
-            referencedColumns: ["shipper_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -302,7 +523,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      "book status": "KK" | "CC" | "NR"
+      book_type: "TRANSFER" | "ONE_LEG"
+      note_category: "URGENT" | "COMMON" | "SHIFT" | "REMINDER"
     }
     CompositeTypes: {
       [_ in never]: never

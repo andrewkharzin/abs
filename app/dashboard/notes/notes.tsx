@@ -1,52 +1,22 @@
-// // notes.tsx
+import { createClient } from "@/utils/supabase/client"
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import RealtimeTodos from "./asyncNotes";
+import { Tables } from '@/types/supabase';
 
-import React, { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react';
-import NotesList from './notesList';
-import AddNoteModal from './noteModal';
-import { getAllNotes, createNote } from './noteCrud'; // Import functions for fetching and creating notes
+interface NoteItemProps {
+  todos: Tables<'todos'>; // Use the imported type for the note prop
+}
 
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-};
-
-const Notes = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    fetchNotes();
-  }, []); // Fetch notes on component mount
-
-  const fetchNotes = async () => {
-    // Fetch all notes from the server
-    const fetchedNotes: Note[] = await getAllNotes();
-    setNotes(fetchedNotes);
-  };
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const handleNoteAdded = async (title: string, content: string) => {
-    // Create a new note and add it to the list
-    await createNote(title, content);
-    // Fetch updated list of notes
-    fetchNotes();
-    // Close the modal
-    setIsModalOpen(false);
-  };
-
+export default async function Home({ todos }: { note: NoteItemProps}) {
+  // const supabase = createClient();
+  // const { data: todos } = await supabase
+  //   .from("todos")
+  //   .select()
+  //   console.log(todos)
   return (
-    <div>
-      <AddNoteModal isOpen={isModalOpen} onClose={toggleModal} onNoteAdded={handleNoteAdded} />
-      <NotesList key={notes.length} notes={notes} />
-    </div>
+
+      <RealtimeTodos todos={todos ?? []} />
+
   );
-};
-
-export default Notes;
-
+}

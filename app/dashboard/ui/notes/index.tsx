@@ -1,4 +1,3 @@
-"use client";
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
@@ -16,7 +15,7 @@ import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/react";
 export const Notes = () => {
   return (
     <>
-        <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
+        <div className="max-w-[120rem] mx-auto w-full flex flex-col gap-4">
 
           <Breadcrumbs isDisabled>
             <BreadcrumbItem>Home</BreadcrumbItem>

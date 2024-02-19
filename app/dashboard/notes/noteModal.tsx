@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
-import {Card, CardHeader, CardBody, CardFooter, Avatar, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Avatar, Button, Spacer} from "@nextui-org/react";
 import CreateNoteForm from './CreateNoteForm'; // Assuming you have a CreateNoteForm component
 
 
@@ -25,7 +25,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdde
     <>
       {/* Button to open the modal */}
       <Button onClick={onClose}>Add Note</Button>
-
+      <Spacer y={4} />
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
