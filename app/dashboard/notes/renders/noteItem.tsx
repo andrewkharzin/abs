@@ -17,7 +17,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
 
          <div className='col-span-3'>
           <span className="text-tiny text-white/60 uppercase font-normal">POST: {" "}{note.inserted_at}</span>
-          <h4 className="text-pink-600 font-mono font-medium text-xl">{note.title}</h4>
+          <h4 className="text-cyan-600 font-medium text-xl">{note.title}</h4>
 
          </div>
          <div>

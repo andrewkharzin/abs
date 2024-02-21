@@ -2,49 +2,76 @@
 
 import { createClient } from "@/utils/supabase/client";
 import NoteItem from "./renders/noteItem";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Tables } from '@/types/supabase';
 
-
-interface Todo {
+interface Note {
   id: number;
+  title: string;
   content: string;
-  inserted_at: string;
-  category: string;
+  // Add other properties as needed
 }
 
-export default function RealtimeTodos({ todos }: { todos: Todo[] }) {
+export default function RealtimeTodos() {
   const supabase = createClient();
   const router = useRouter();
+  const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    const channel = supabase
-      .channel("realtime todos")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "todos",
-        },
-        () => {
-          router.refresh();
+    const fetchTodos = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('todos')
+          .select('*');
+        if (error) {
+          throw error;
         }
-      )
-      .subscribe();
+        if (data) {
+          setNotes(data);
+        }
+      } catch (error) {
+        console.error('Error fetching todos:', error.message);
+      }
+    };
+
+    const handleRealtimeChanges = () => {
+      const channel = supabase
+        .channel("realtime todos")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "todos",
+          },
+          (payload) => {
+            console.log("Realtime change received:", payload);
+            fetchTodos(); // Fetch updated todos on changes
+          }
+        )
+        .subscribe();
+      console.log("Subscribed to realtime changes");
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+
+    fetchTodos(); // Initial fetch
+    const unsubscribe = handleRealtimeChanges();
 
     return () => {
-      supabase.removeChannel(channel);
+      unsubscribe();
     };
   }, [supabase, router]);
 
   return (
-    <>
-      {todos?.map((todo: Todo) => (
-        <div key={todo.id}>
-          <NoteItem note={todo} />
-        </div>
-      ))}
-    </>
+    <div className="max-w-[900px] gap-2 grid lg:grid-cols-12 sm:grid-cols-2 grid-rows-2 px-8">
+
+      {notes.slice().reverse().map(note => (
+      <NoteItem note={note ?? []}/>
+    ))}
+    </div>
+
   );
 }

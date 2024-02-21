@@ -15,7 +15,7 @@ import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/react";
 export const Notes = () => {
   return (
     <>
-        <div className="max-w-[120rem] mx-auto w-full flex flex-col gap-4">
+        <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
 
           <Breadcrumbs isDisabled>
             <BreadcrumbItem>Home</BreadcrumbItem>
@@ -41,7 +41,10 @@ export const Notes = () => {
 
             </div>
           </div>
-          <UserNotes />
+          <div className="max-w-[95rem] mx-auto w-full">
+
+              <UserNotes />
+          </div>
         </div>
     </>
 

@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import 'react-quill/dist/quill.snow.css'
-import { Roboto, Playfair_Display } from "next/font/google";
+import { Roboto } from "next/font/google";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -16,11 +16,11 @@ const roboto_init = Roboto({
 	variable: '--font-roboto'
 })
 
-const play = Playfair_Display({
-	subsets: ['latin'],
-	weight: ['600'],
-	variable: '--font-playfair_display'
-})
+// const play = Playfair_Display({
+// 	subsets: ['latin'],
+// 	weight: ['600'],
+// 	variable: '--font-playfair_display'
+// })
 
 export const metadata: Metadata = {
 	title: {

@@ -1,22 +1,28 @@
-import { createClient } from "@/utils/supabase/client"
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 import RealtimeTodos from "./asyncNotes";
-import { Tables } from '@/types/supabase';
 
-interface NoteItemProps {
-  todos: Tables<'todos'>; // Use the imported type for the note prop
-}
+export default function Home() {
 
-export default async function Home({ todos }: { note: NoteItemProps}) {
-  // const supabase = createClient();
-  // const { data: todos } = await supabase
-  //   .from("todos")
-  //   .select()
-  //   console.log(todos)
+  const fetchTodos = async () => {
+    try {
+      const supabase = createClient();
+      const { data: todos, error } = await supabase.from("todos").select();
+      if (error) {
+        throw error;
+      }
+      return todos;
+    } catch (error) {
+      console.error('Error fetching todos:', error.message);
+      return null; // Handle error appropriately
+    }
+  };
+
+  const todos = fetchTodos();
+
   return (
+    <div className="w-full flex flex-col gap-4">
 
-      <RealtimeTodos todos={todos ?? []} />
-
+      <RealtimeTodos notes={todos ?? []} />
+    </div>
   );
 }
