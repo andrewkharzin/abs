@@ -1,5 +1,16 @@
 import { createClient } from "@/utils/supabase/client";
 import RealtimeTodos from "./asyncNotes";
+import TimeLineTodos from "./asyncNotesLines";
+import {
+  Timeline,
+  TimelineItem,
+  TimelineConnector,
+  TimelineHeader,
+  TimelineIcon,
+  TimelineBody,
+  Typography,
+} from "@material-tailwind/react";
+
 
 export default function Home() {
 
@@ -20,9 +31,22 @@ export default function Home() {
   const todos = fetchTodos();
 
   return (
-    <div className="w-full flex flex-col gap-4">
+
+    <div className="w-full grin grin-col-2 gap-4">
+
+      <div>
 
       <RealtimeTodos notes={todos ?? []} />
+
+      </div>
+      {/* <div>
+      <TimeLineTodos notes={todos ?? []} />
+
+      </div> */}
+
+
     </div>
+
+
   );
 }

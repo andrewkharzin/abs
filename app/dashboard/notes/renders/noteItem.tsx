@@ -2,36 +2,59 @@ import React from 'react';
 import { Card, CardHeader, Image, Button, CardFooter, CardBody } from '@nextui-org/react';
 import { Chip } from "@nextui-org/react";
 import { Tables } from '@/types/supabase';
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer} from "@nextui-org/react";
 
 
 interface NoteItemProps {
   note: Tables<'todos'>; // Use the imported type for the note prop
 }
 
+const formatDate = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+  const formattedDate = date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return formattedDate;
+};
+
 const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+  const insertedAt = new Date(note.inserted_at);
+  const formattedDate = insertedAt.toLocaleString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false
+  });
+
+
   return (
-    <Card key={note.id} isFooterBlurred className="w-full h-[270px] sm:col-span-4 lg:col-span-6">
-      <CardHeader className="absolute z-10 top-1 flex-col items-start bg-black/90">
+    <Card key={note.id} isFooterBlurred className="w-full h-[135px] sm:col-span-4 lg:col-span-6">
+      <CardHeader className="absolute z-10 flex-col items-start dark:bg-black/90">
 
          <div className='col-span-3'>
-          <span className="text-tiny text-white/60 uppercase font-normal">POST: {" "}{note.inserted_at}</span>
-          <h4 className="text-cyan-600 font-medium text-xl">{note.title}</h4>
+          <h4 className="text-base font-bold font-roboto text-sm">{note.title}</h4>
 
          </div>
          <div>
 
          </div>
       </CardHeader>
-      <CardBody>
+      {/* <CardBody>
          <article className="mx-auto justyfy-content mt-20">
-          <p className='text-tiny font-light font-mono'>
+          <p className='font-light font-roboto text-md'>
             {note.content}
           </p>
          </article>
-      </CardBody>
-      <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+      </CardBody> */}
+      <CardFooter className="absolute dark:bg-black/60 dg-white bottom-0 z-10">
         <div className="flex flex-grow gap-2 items-center">
           <Image
             alt="Breathing app icon"
@@ -40,12 +63,27 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
             src="https://masterpiecer-images.s3.yandex.net/f3247d0eaed211ee9e407e3ceed934b2:upscaled"
           />
           <div className="flex flex-col">
-            <p className="text-tiny text-white/60">Andrew KHZ</p>
+            {/* <h4 className="text-cyan-600 font-medium text-xs">{note.title}</h4> */}
+            <Spacer />
+            <div className="flex flec-col flex-wrap">
+             <div>
+
+                <p className="text-tiny text-roboto uppercase dark:text-cyan-400 text-cyan-600 font-light">{formattedDate}</p>
+
+              </div>
+                <span>{"  "}</span>
+                {/* <p className="text-tiny italic text-cyan-600">Andrew KHZ</p> */}
+             <div>
+
+             </div>
+            </div>
+            <Spacer />
             <p className="text-tiny text-white/60"></p>
+            <Spacer />
+      <Chip variant="dot" size='sm' rounded="none" color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
           </div>
-      <Chip variant="dot" size='sm' color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
         </div>
-        <Button onPress={onOpen} radius="sm" size="sm">Show</Button>
+        <Button color="primary" variant="flat" onPress={onOpen} radius="sm" size="sm">Show</Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (
