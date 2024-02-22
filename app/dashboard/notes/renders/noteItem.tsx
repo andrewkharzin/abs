@@ -1,28 +1,23 @@
+'use client'
+
 import React from 'react';
 import { Card, CardHeader, Image, Button, CardFooter, CardBody } from '@nextui-org/react';
 import { Chip } from "@nextui-org/react";
 import { Tables } from '@/types/supabase';
+import { useRouter } from "next/navigation";
+import { Database } from '@/types/supabase'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer} from "@nextui-org/react";
 
 
 interface NoteItemProps {
-  note: Tables<'todos'>; // Use the imported type for the note prop
+  note: Tables<'todos'>;
+  profile: Tables<'profiles'> // Use the imported type for the note prop
 }
-
-const formatDate = (dateTimeString: string) => {
-  const date = new Date(dateTimeString);
-  const formattedDate = date.toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  return formattedDate;
-};
 
 const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const router = useRouter();
+
 
   const insertedAt = new Date(note.inserted_at);
   const formattedDate = insertedAt.toLocaleString('en-US', {
@@ -33,7 +28,6 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
     minute: 'numeric',
     hour12: false
   });
-
 
   return (
     <Card key={note.id} isFooterBlurred className="w-full h-[135px] sm:col-span-4 lg:col-span-6">
@@ -60,7 +54,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
             alt="Breathing app icon"
             radius='md'
             className="w-10 bg-black"
-            src="https://masterpiecer-images.s3.yandex.net/f3247d0eaed211ee9e407e3ceed934b2:upscaled"
+
           />
           <div className="flex flex-col">
             {/* <h4 className="text-cyan-600 font-medium text-xs">{note.title}</h4> */}
