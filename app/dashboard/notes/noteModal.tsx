@@ -7,6 +7,8 @@ import CreateNoteForm from './CreateNoteForm'; // Assuming you have a CreateNote
 import { Database } from '@/types/supabase'
 import { createClient } from "@/utils/supabase/client";
 import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+
 interface AddNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,53 +17,7 @@ interface AddNoteModalProps {
 }
 
 const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdded,  userId }) => {
-  const supabase = createClientComponentClient<Database>()
-  const [isFollowed, setIsFollowed] = React.useState(false);
-  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
-  const [users, setUsers] = useState<{ value: string; label: string }[]>([]);
 
-  useEffect(() => {
-    // Fetch categories from database
-    const fetchCategories = async () => {
-      try {
-        const { data, error } = await supabase.from('categories').select('id, name');
-        if (error) {
-          throw error;
-        }
-        if (data) {
-          const categories = data.map((category: any) => ({
-            value: category.id,
-            label: category.name
-          }));
-          setCategories(categories);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error.message);
-      }
-    };
-
-    // Fetch users from database
-    // const fetchUsers = async () => {
-    //   try {
-    //     const { data, error } = await supabase.from('users').select('id, username');
-    //     if (error) {
-    //       throw error;
-    //     }
-    //     if (data) {
-    //       const users = data.map((user: any) => ({
-    //         value: user.id,
-    //         label: user.username
-    //       }));
-    //       setUsers(users);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching users:', error.message);
-    //   }
-    // };
-
-    fetchCategories();
-    // fetchUsers();
-  }, []); // Fetch data only once when component mounts
 
 
 
@@ -88,7 +44,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdde
 
             <CardBody className="px-3 py-0 text-small text-default-400">
              <CreateNoteForm onNoteAdded={handleNoteAdded} />
-             
+
             </CardBody>
           </Card>
           </ModalBody>

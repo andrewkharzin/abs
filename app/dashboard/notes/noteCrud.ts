@@ -1,33 +1,6 @@
 // noteCrud.ts
 import { createClient } from '@/utils/supabase/client';
 
-interface UserProfile {
-  id: string;
-  username: string;
-  avatar_url: string;
-}
-
-
-// export async function getUserProfile(userId: string): Promise<UserProfile | null> {
-//   const supabase = createClient();
-//   try {
-//     const { data, error } = await supabase
-//       .from('profiles')
-//       .select('*')
-//       .eq('id', userId)
-//       .single();
-
-//     if (error || !data) {
-//       console.error('Error fetching user profile:', error?.message || 'No data returned');
-//       return null;
-//     }
-
-//     return data as UserProfile;
-//   } catch (error) {
-//     console.error('Error fetching user profile:', error.message);
-//     return null;
-//   }
-// }
 
 export async function createNote(title: string, content: string) {
   const supabase = createClient();

@@ -30,8 +30,12 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
   });
 
   return (
-    <Card key={note.id} isFooterBlurred className="w-full h-[135px] sm:col-span-4 lg:col-span-6">
-      <CardHeader className="absolute z-10 flex-col items-start dark:bg-black/90">
+    <Card key={note.id}
+          isFooterBlurred
+          className="w-full h-[230px] sm:col-span-4 lg:col-span-6"
+          shadow="md"
+          >
+      <CardHeader className="absolute z-10 flex-col items-start dark:bg-black/60">
 
          <div className='col-span-3'>
           <h4 className="text-base font-bold font-roboto text-sm">{note.title}</h4>
@@ -41,14 +45,15 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
 
          </div>
       </CardHeader>
-      {/* <CardBody>
-         <article className="mx-auto justyfy-content mt-20">
+      <CardBody>
+         <article className="mx-auto justyfy-content mt-10">
           <p className='font-light font-roboto text-md'>
             {note.content}
           </p>
          </article>
-      </CardBody> */}
-      <CardFooter className="absolute dark:bg-black/60 dg-white bottom-0 z-10">
+      </CardBody>
+
+      <CardFooter className="absolute dark:bg-black/80 bottom-0 z-10">
         <div className="flex flex-grow gap-2 items-center">
           <Image
             alt="Breathing app icon"
@@ -62,7 +67,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note }) => {
             <div className="flex flec-col flex-wrap">
              <div>
 
-                <p className="text-tiny text-roboto uppercase dark:text-cyan-400 text-cyan-600 font-light">{formattedDate}</p>
+                <p className="font-black font-mono uppercase dark:text-base text-cyan-700 font-light">{formattedDate}</p>
 
               </div>
                 <span>{"  "}</span>

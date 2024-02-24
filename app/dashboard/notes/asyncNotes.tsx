@@ -30,6 +30,7 @@ export default function RealtimeTodos() {
         if (data) {
           setNotes(data);
         }
+        console.log(data)
       } catch (error) {
         console.error('Error fetching todos:', error.message);
       }
@@ -69,7 +70,7 @@ export default function RealtimeTodos() {
     <div className="max-w-[900px] gap-2 grid lg:grid-cols-12 sm:grid-cols-3 grid-rows-2">
 
       {notes.slice().reverse().map(note => (
-      <NoteItem note={note ?? []}/>
+       <NoteItem key={note.id} note={note ?? []}/>
     ))}
     </div>
 
