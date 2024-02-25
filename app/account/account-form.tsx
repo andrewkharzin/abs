@@ -4,6 +4,8 @@ import { Database } from '@/types/supabase'
 import Avatar from './avatar'
 import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
+import {Spacer, Card, CardHeader, CardBody, CardFooter, Button, Input} from "@nextui-org/react";
+
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClientComponentClient<Database>()
   const [loading, setLoading] = useState(true)
@@ -74,65 +76,95 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="form-widget">
-      <Avatar
-      uid={user.id}
-      url={avatar_url}
-      size={150}
-      onUpload={(url) => {
-        setAvatarUrl(url)
-        updateProfile({ fullname, username, website, avatar_url: url })
-      }}
-    />
+    <div className="flex flex-col mx-auto">
       <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={user?.email} disabled />
+      <Card>
+        <CardHeader>
+
+          <h3 className="font-bold text-ms dark:text-slate-300 text-base ">Update User info</h3>
+        </CardHeader>
+        <CardBody>
+          <Avatar
+          uid={user.id}
+          url={avatar_url}
+          size={150}
+          onUpload={(url) => {
+            setAvatarUrl(url)
+            updateProfile({ fullname, username, website, avatar_url: url })
+          }}
+        />
+
+        </CardBody>
+        <CardFooter>
+
+        </CardFooter>
+      </Card>
+
       </div>
       <div>
-        <label htmlFor="fullName">Full Name</label>
-        <input
-          id="fullName"
-          type="text"
-          value={fullname || ''}
-          onChange={(e) => setFullname(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ''}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          type="url"
-          value={website || ''}
-          onChange={(e) => setWebsite(e.target.value)}
-        />
+         <div>
+            <Spacer y={2} />
+            <span className="text-sm font-mono font-light text-base">Email</span>
+            <Spacer y={2} />
+            <Input id="email" type="text" value={user?.email} disabled />
+          </div>
+          <div>
+           <Spacer y={2} />
+            <span className="text-sm font-mono font-light text-base">Full Name</span>
+            <Spacer y={2} />
+            <Input
+              id="fullName"
+              type="text"
+              value={fullname || ''}
+              onChange={(e) => setFullname(e.target.value)}
+            />
+          </div>
+          <div>
+           <Spacer y={2} />
+            <span className="text-sm font-mono font-light text-base">Username</span>
+            <Spacer y={2} />
+            <Input
+              id="username"
+              type="text"
+              value={username || ''}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+          <Spacer y={2} />
+            <span className="text-sm font-mono font-light text-base">Website</span>
+            <Spacer y={2} />
+            <Input
+              id="website"
+              type="url"
+              value={website || ''}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </div>
+
+          <div>
+          <Spacer y={2} />
+            <Button
+              color="success"
+              variant="solid"
+              onClick={() => updateProfile({ fullname, username, website, avatar_url })}
+              disabled={loading}
+            >
+              {loading ? 'Loading ...' : 'Update'}
+            </Button>
+            <div>
+            <form action="/auth/signout" method="post">
+              <Button color="danger" variant="solid" type="submit">
+                Sign out
+              </Button>
+            </form>
+          </div>
+          </div>
       </div>
 
-      <div>
-        <button
-          className="button primary block"
-          onClick={() => updateProfile({ fullname, username, website, avatar_url })}
-          disabled={loading}
-        >
-          {loading ? 'Loading ...' : 'Update'}
-        </button>
-      </div>
 
-      <div>
-        <form action="/auth/signout" method="post">
-          <button className="button block" type="submit">
-            Sign out
-          </button>
-        </form>
-      </div>
     </div>
-  )
+
+  );
+
 }

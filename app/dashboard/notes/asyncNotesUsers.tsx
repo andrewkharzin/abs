@@ -18,12 +18,12 @@ interface Profile {
   username: string;
 }
 
-export default function RealtimeTodos() {
+export default function RealtimeNoteUsers() {
   const supabase = createClient();
   const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [avatar_url, setAvatarUrl] = useState<string | null>(null)
+  const [avatar_url, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTodosAndProfiles = async () => {
@@ -31,33 +31,36 @@ export default function RealtimeTodos() {
         // Fetch todos
         const { data: todosData, error: todosError } = await supabase
           .from('todos')
-          .select('*')
-          .order('id', { ascending: true });
+          .select('*');
         if (todosError) {
           throw todosError;
         }
         if (todosData) {
-          setNotes(todosData);
+          // Filter out notes of the current user
+          const currentUserId = supabase.auth.user?.id;
+          const filteredTodos = todosData.filter(todo => todo.user_id !== currentUserId);
+          setNotes(filteredTodos);
         }
 
-        // Fetch profiles
-        const userIds = todosData.map(todo => todo.user_id);
+        // Fetch profiles for all users except the current user
+        const currentUserId = supabase.auth.user?.id;
+        const userIds = filteredTodos.map(todo => todo.user_id); // Use filteredTodos instead of todosData
         const { data: profilesData, error: profilesError } = await supabase
           .from('profiles')
           .select('*')
-          .in('id', userIds); // Assuming user_id is the primary key in the profiles table
+          .in('id', userIds);
         if (profilesError) {
           throw profilesError;
         }
         if (profilesData) {
           setProfiles(profilesData);
-          setAvatarUrl(avatar_url)
-          console.log("Profiles dtat", profilesData)
+          console.log("Profiles data", profilesData);
         }
       } catch (error) {
         console.error('Error fetching data:', error.message);
       }
     };
+
     const handleRealtimeChanges = () => {
       const channel = supabase
         .channel("realtime todos")
@@ -86,7 +89,6 @@ export default function RealtimeTodos() {
     return () => {
       unsubscribe();
     };
-
   }, [supabase, router]);
 
   return (

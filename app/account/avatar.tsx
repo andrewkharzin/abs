@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react'
 import { Database } from '@/types/supabase'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import Image from 'next/image'
+// import Image from 'next/image'
 type Profiles = Database['public']['Tables']['profiles']['Row']
+import { Button, Input, Image, Spacer, Chip } from "@nextui-org/react";
 
 export default function Avatar({
   uid,
@@ -65,20 +66,24 @@ export default function Avatar({
   }
 
   return (
-    <div>
+    <div className="relative ">
       {avatarUrl ? (
         <Image
           width={size}
           height={size}
           src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
+          className=""
           style={{ height: size, width: size }}
         />
       ) : (
         <div className="avatar no-image" style={{ height: size, width: size }} />
       )}
+      <Spacer y={2} />
       <div style={{ width: size }}>
+      {/* <Chip color="warning" variant="faded" htmlFor="single">
+          {uploading ? 'Uploading ...' : 'Upload'}
+      </Chip> */}
         <label className="button primary block" htmlFor="single">
           {uploading ? 'Uploading ...' : 'Upload'}
         </label>

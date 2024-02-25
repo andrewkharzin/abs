@@ -40,13 +40,13 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdde
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Add Note</ModalHeader>
           <ModalBody>
-          <Card className="max-w-[340px]">
 
-            <CardBody className="px-3 py-0 text-small text-default-400">
-             <CreateNoteForm onNoteAdded={handleNoteAdded} />
 
-            </CardBody>
-          </Card>
+
+            <CreateNoteForm onNoteAdded={handleNoteAdded} />
+
+
+
           </ModalBody>
         </ModalContent>
       </Modal>

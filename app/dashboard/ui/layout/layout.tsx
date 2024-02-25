@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLockedBody } from "../hooks/useBodyLock";
 import { NavbarWrapper } from "../navbar/navbar";
 import { SidebarWrapper } from "../sidebar/sidebar";
@@ -16,10 +16,14 @@ interface Props {
 export const Layout = ({ children }: Props) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [_, setLocked] = useLockedBody(false);
+
+
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
     setLocked(!sidebarOpen);
   };
+
+
 
   return (
     <SidebarContext.Provider
@@ -32,6 +36,7 @@ export const Layout = ({ children }: Props) => {
         <SidebarWrapper />
         <NavbarWrapper>{children}</NavbarWrapper>
       </section>
+
     </SidebarContext.Provider>
   );
 };

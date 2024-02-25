@@ -1,12 +1,29 @@
 // noteCrud.ts
 import { createClient } from '@/utils/supabase/client';
+import { Session } from '@supabase/supabase-js';
 
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  category: string; // Add category field
+  tags: string[]; // Add tags field
+  user_id: string; // Add user_id field
+}
 
-export async function createNote(title: string, content: string) {
+export async function createNote(
+  title: string,
+  content: string,
+  category: string,
+  tags: string[],
+): Promise<Note | null> {
   const supabase = createClient();
+  // Retrieve the current user's session
+
+
   const { data, error } = await supabase
     .from('todos')
-    .insert({ title, content })
+    .insert({ title, content, category, tags })
     .single();
 
   if (error) {
@@ -16,6 +33,22 @@ export async function createNote(title: string, content: string) {
 
   return data;
 }
+
+
+// export async function createNote(title: string, content: string) {
+//   const supabase = createClient();
+//   const { data, error } = await supabase
+//     .from('todos')
+//     .insert({ title, content })
+//     .single();
+
+//   if (error) {
+//     console.error('Error creating note:', error.message);
+//     return null;
+//   }
+
+//   return data;
+// }
 
 export async function getAllNotes() {
   const supabase = createClient();
