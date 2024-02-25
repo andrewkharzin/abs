@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/client";
-import NoteItem from "./renders/noteItem";
 import { useRouter } from "next/navigation";
 import { Tables } from '@/types/supabase';
-import TodoTimeline from './renders/noteChrono'
+import { Chrono } from "react-chrono";
+
+
 interface Note {
   id: number;
   title: string;
   content: string;
+  category: string;
   user_id: string;
+  inserted_at: string
+
   // Add other properties as needed
 }
 
@@ -89,19 +93,17 @@ export default function RealtimeTodos() {
 
   }, [supabase, router]);
 
-  return (
-    <div className="max-w-[400px]">
-      {notes && notes.length > 0 && notes.slice().reverse().map(note => (
-        <>
-        <NoteItem
-          key={note.id}
-          note={note}
-          profile={profiles.find(profile => profile.id === note.user_id)}
-        />
-        {/* <TodoTimeline /> */}
-        </>
-      ))}
+  const timelineItems = notes.map((note, index) => ({
+    title: note.title, // Main title
+    cardTitle: note.category, // Category can be used as card title
+    cardSubtitle: note.content, // Content can be used as card subtitle
+    date: note.inserted_at, // Description can be used as detailed text
+  }));
+  console.log("Caheck", timelineItems)
 
+  return (
+      <div style={{ width: "100%", height: "400px" }}>
+      <Chrono items={timelineItems} mode="VERTICAL" />
     </div>
   );
 }

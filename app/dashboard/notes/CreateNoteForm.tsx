@@ -4,17 +4,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Session, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Input, Button, Spacer } from "@nextui-org/react";
 
-
 type Todos = Database['public']['Tables']['todos']['Row']
 
-type Todo = {
-  id: number;
-  title: string;
-  content: string;
-  category: string;
-  tags: string;
-  user_id: string;
-}
 
 export default function TodoList({ session }: { session: Session }) {
   const supabase = createClientComponentClient()
@@ -25,26 +16,45 @@ export default function TodoList({ session }: { session: Session }) {
   const [newTaskTags, setNewTaskTags] = useState('');
   const [errorText, setErrorText] = useState('');
 
-  const user = session?.user
+  const fetchData = async () => {
+    try {
+      const user = await supabase.auth.getUser();
+      console.log(user);
+      return user;
+    } catch (error) {
+      console.error('Error fetching user:', error.message);
+      return null;
+    }
+  };
 
   const addTodo = async () => {
-    const title = newTaskTitle.trim();
-    const content = newTaskContent.trim();
-    const category = newTaskCategory.trim();
-    const tags = newTaskTags.trim();
+    try {
+      const user = await fetchData();
+      console.log("User data response", user);
+      if (!user) {
+        throw new Error('User data not found');
+      }
 
+      const title = newTaskTitle.trim();
+      const content = newTaskContent.trim();
+      const category = newTaskCategory.trim();
+      const tags = newTaskTags.trim();
 
-    const { data: todo, error } = await supabase.from('todos').insert({ title, content, category, tags, user_id: user?.id }).single();
+      const { data: todo, error } = await supabase.from('todos').insert({ title, content, category, tags, user_id: user.data.user?.id }).single();
 
-    if (error) {
-      setErrorText(error.message);
-    } else {
+      if (error) {
+        throw new Error(error.message);
+      }
+
       setTodos([...todos, todo]);
       setNewTaskTitle('');
       setNewTaskContent('');
       setNewTaskCategory('');
       setNewTaskTags('');
       setErrorText('');
+    } catch (error) {
+      console.error('Error adding todo:', error.message);
+      setErrorText('Error adding todo');
     }
   };
 
@@ -113,15 +123,16 @@ export default function TodoList({ session }: { session: Session }) {
         </div>
         <Spacer y={4} />
         <Button color="success" type="submit">Add Task</Button>
+        <Spacer y={4} />
       </form>
       {errorText && <p>{errorText}</p>}
       <ul>
-        {todos.map(todo => (
-          <li key={todo.id}>
-            <div>{todo.title}</div>
-            <Button onClick={() => deleteTodo(todo.id)}>Delete</Button>
-          </li>
-        ))}
+      {todos.map(todo => (
+        todo && <li key={todo.id}>
+          <div>{todo.id}</div>
+          {/* Render other todo properties here */}
+        </li>
+      ))}
       </ul>
     </div>
   );

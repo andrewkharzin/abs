@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from 'react';
 import RealtimeTodos from "./asyncNotes";
 import RealtimeNoteUsers from "./asyncNotesUsers";
+import RealtimeTodosChrono from "./renders/noteChrono";
 import AddNoteModal from './noteModal';
 
 export default function Home() {
@@ -13,11 +14,17 @@ export default function Home() {
     setIsModalOpen(!isModalOpen);
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+
   return (
     <>
       <AddNoteModal isOpen={isModalOpen} onClose={toggleModal} />
-    <div className="container grid grid-cols-2 grid-rows-2 gap-4">
-      <div>
+    <div className="container grid grid-cols-2 gap-4">
+      <div className="mt-5">
         <h3>My notes</h3>
         {/* For current user */}
         <RealtimeTodos />
@@ -25,8 +32,7 @@ export default function Home() {
       </div>
         <div>
           <h3>Users flow</h3>
-          {/* For another users */}
-        <RealtimeNoteUsers />
+          <RealtimeTodosChrono />
         </div>
     </div>
     </>

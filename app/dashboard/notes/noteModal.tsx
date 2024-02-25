@@ -19,8 +19,6 @@ interface AddNoteModalProps {
 const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdded,  userId }) => {
 
 
-
-
   const handleNoteAdded = () => {
 
     if (onNoteAdded) {
