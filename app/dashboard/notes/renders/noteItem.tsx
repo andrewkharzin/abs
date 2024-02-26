@@ -6,7 +6,8 @@ import { Chip } from "@nextui-org/react";
 import { Tables } from '@/types/supabase';
 import { useRouter } from "next/navigation";
 import { Database } from '@/types/supabase'
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer} from "@nextui-org/react";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer, Avatar} from "@nextui-org/react";
 
 
 interface NoteItemProps {
@@ -21,22 +22,42 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
 
   const insertedAt = new Date(note.inserted_at);
   const formattedDate = insertedAt.toLocaleString('en-US', {
-    day: 'numeric',
+    day: '2-digit',
     month: 'short',
     year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: false
   });
 
+  // Splitting the formattedDate into its components
+  const [datePart, timePart] = formattedDate.split(', ');
+  let [day, month, year] = datePart.split(' ');
+  if (month === 'undefined') {
+    // If month is undefined, set it to an empty string
+    month = '';
+  }
+  const time = timePart.slice(0, -3); // Removing seconds from the time
+
+  // Format the date with calendar and clock icons
+  const formattedDateTime = (
+    <div className="flex flex-row">
+      <div className="mt-0"><FaRegCalendarAlt /></div>
+      <div className='mx-2'>{formattedDate.split(',')[1].trim()} {/* Date */}</div>
+      <div>{formattedDate.split(',')[0].trim()} {/* Time */}</div>
+    </div>
+  );
+
+
   // Construct the correct avatar URL
   const avatarUrl = profile ? `https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}` : '';
+  const username = profile?.username
 
   return (
     <Card key={note.id}
           isFooterBlurred
-          className="w-full h-[230px] sm:col-span-4 lg:col-span-6"
-          shadow="md"
+          className="w-full h-[100px] sm:col-span-4 lg:col-span-6"
+          shadow="sm"
           >
       <CardHeader className="absolute z-10 flex-col items-start dark:bg-black/60">
 
@@ -48,48 +69,35 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
 
          </div>
       </CardHeader>
-      <CardBody>
-         <article className="mx-auto justyfy-content mt-10">
-          <p className='font-light font-roboto text-md'>
+      {/* <CardBody>
+         <article className="justyfy-content mt-10">
+          <p className='font-light text-slate-800/40 font-roboto text-md'>
             {note.content}
           </p>
          </article>
-      </CardBody>
-
-      <CardFooter className="absolute dark:bg-black/80 bottom-0 z-10">
-        <div className="flex flex-grow gap-2 items-center">
-          {/* // User Profile image */}
-          <Image
-            alt="Breathing app icon"
-            radius='md'
-            className="w-10 bg-black"
-            src={avatarUrl}
-            // src="https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/e41c59dd-bd6e-45bf-8231-a2f5b83923b7-0.057407847982706706.png?t=2024-02-24T07%3A46%3A18.081Z"
-
-
-          />
-          <div className="flex flex-col">
-            {/* <h4 className="text-cyan-600 font-medium text-xs">{note.title}</h4> */}
-            <Spacer />
-            <div className="flex flec-col flex-wrap">
-             <div>
-
-                <p className="font-roboto uppercase dark:text-base text-cyan-700 font-light">{formattedDate}</p>
-
-              </div>
-                <span>{"  "}</span>
-                {/* <p className="text-tiny italic text-cyan-600">Andrew KHZ</p> */}
-             <div>
-
-             </div>
+      </CardBody> */}
+      <Spacer y={10} />
+      <CardFooter className="justify-between">
+        <div className="flex gap-5">
+            <Avatar
+              alt="User"
+              radius="sm"
+              isBordered
+              size="md"
+              color="danger"
+              className="w-10 bg-black"
+              src={avatarUrl}
+              // src="https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/e41c59dd-bd6e-45bf-8231-a2f5b83923b7-0.057407847982706706.png?t=2024-02-24T07%3A46%3A18.081Z"
+            />
+            <div className="flex flex-col gap-1 items-start justify-center">
+            <h4 className="text-small font-semibold leading-none text-default-600 mb-0">{username}</h4>
+            <Chip variant="dot" size='sm' radius="sm" color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
             </div>
-            <Spacer />
-            <p className="text-tiny text-white/60"></p>
-            <Spacer />
-      <Chip variant="dot" size='sm' rounded="none" color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
+              <span className="text-xs font-roboto dark:text-cyan-500">{formattedDateTime}</span>
+
           </div>
-        </div>
-        <Button color="primary" variant="flat" onPress={onOpen} radius="sm" size="sm">Show</Button>
+
+        <Button variant="solid" onPress={onOpen} radius="sm" size="sm">Show</Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (

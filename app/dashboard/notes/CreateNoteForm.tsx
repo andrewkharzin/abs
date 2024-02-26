@@ -1,20 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Database } from "@/types/supabase";
+import { Enums } from "@/types/supabase";
+import {Select, SelectItem} from "@nextui-org/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Session, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Input, Button, Spacer } from "@nextui-org/react";
+import { notes_cats } from "./data/note_category"
+
 
 type Todos = Database['public']['Tables']['todos']['Row']
+
 
 
 export default function TodoList({ session }: { session: Session }) {
   const supabase = createClientComponentClient()
   const [todos, setTodos] = useState<Todos[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('COMMON'); // State to hold selected category
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskContent, setNewTaskContent] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState('');
-  const [newTaskTags, setNewTaskTags] = useState('');
   const [errorText, setErrorText] = useState('');
+  const [isOpen, setIsOpen] = useState(false); // State variable to track modal open/close
+  const [selectedCategoryInternal, setSelectedCategoryInternal] = useState<string>('COMMON'); // State to hold selected category internally
+
+  const [newTaskTags, setNewTaskTags] = useState<string[]>([]);
+  // const [tags, setTags] = useState<string[]>([]);
+  const handleCloseModal = () => {
+    setIsOpen(false); // Close the modal
+  };
+  // Handler for selecting categories
+  const handleCategorySelect = (selectedItem: string) => {
+    setSelectedCategory(selectedItem);
+  };
+
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const { data, error } = await supabase.from("Enums").select("note_category")
+  //       if (error) throw error;
+  //       if (!data) throw new Error('No data returned from the query');
+  //       setCategories(data.map((item: { note_category: Category[] }) => item.note_category));
+  //       console.log("Cats loaded", note_category)
+  //     } catch (error) {
+  //       console.error('Error fetching categories:', error.message);
+  //     }
+  //   };
+
+  //   fetchCategories();
+  // }, [supabase]);
 
   const fetchData = async () => {
     try {
@@ -40,7 +73,7 @@ export default function TodoList({ session }: { session: Session }) {
       const category = newTaskCategory.trim();
       const tags = newTaskTags.trim();
 
-      const { data: todo, error } = await supabase.from('todos').insert({ title, content, category, tags, user_id: user.data.user?.id }).single();
+      const { data: todo, error } = await supabase.from('todos').insert({ title, content, category: selectedCategoryInternal, tags, user_id: user.data.user?.id }).single();
 
       if (error) {
         throw new Error(error.message);
@@ -49,9 +82,11 @@ export default function TodoList({ session }: { session: Session }) {
       setTodos([...todos, todo]);
       setNewTaskTitle('');
       setNewTaskContent('');
+      setSelectedCategory('');
       setNewTaskCategory('');
       setNewTaskTags('');
       setErrorText('');
+      handleCloseModal(); // Close the modal after adding the task
     } catch (error) {
       console.error('Error adding todo:', error.message);
       setErrorText('Error adding todo');
@@ -101,14 +136,25 @@ export default function TodoList({ session }: { session: Session }) {
         </div>
         <div>
           <Spacer y={2} />
-          <Input
-            type="text"
-            id="category"
-            value={newTaskCategory}
-            label="Category"
-            onChange={(e) => setNewTaskCategory(e.target.value)}
-            variant="outlined"
-          />
+
+          <Select
+              label="Categories"
+              placeholder="Select category"
+              selectionMode="single"
+              // value={selectedCategory}
+              value={selectedCategoryInternal} // Use internal state here
+              className=""
+              onChange={(e) => {
+                setSelectedCategoryInternal(e.target.value); // Update internal state
+                setSelectedCategory(e.target.value); // Update external state
+              }}
+            >
+              {notes_cats.map((notes_cat) => (
+                <SelectItem key={notes_cat.value} value={notes_cat.value}>
+                  {notes_cat.label}
+                </SelectItem>
+              ))}
+            </Select>
         </div>
         <div>
           <Spacer y={2} />

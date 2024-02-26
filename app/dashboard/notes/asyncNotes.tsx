@@ -90,16 +90,16 @@ export default function RealtimeTodos() {
   }, [supabase, router]);
 
   return (
-    <div className="max-w-[400px]">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
       {notes && notes.length > 0 && notes.slice().reverse().map(note => (
-        <>
-        <NoteItem
-          key={note.id}
-          note={note}
-          profile={profiles.find(profile => profile.id === note.user_id)}
-        />
-        {/* <TodoTimeline /> */}
-        </>
+        <div key={note.id} className="p-4">
+
+          <NoteItem
+            key={note.id}
+            note={note}
+            profile={profiles.find(profile => profile.id === note.user_id)}
+          />
+        </div>
       ))}
 
     </div>

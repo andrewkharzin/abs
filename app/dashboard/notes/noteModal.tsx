@@ -19,12 +19,22 @@ interface AddNoteModalProps {
 const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdded,  userId }) => {
 
 
-  const handleNoteAdded = () => {
 
+  // const handleNoteAdded = () => {
+  //   if (onNoteAdded) {
+  //     onNoteAdded();
+  //   }
+  //   // Close the modal
+  //   onClose();
+  // };
+  const handleNoteAdded = () => {
     if (onNoteAdded) {
       onNoteAdded();
     }
-    // Close the modal
+  };
+
+  const handleClose = () => {
+    handleNoteAdded();
     onClose();
   };
 
@@ -41,7 +51,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdde
 
 
 
-            <CreateNoteForm onNoteAdded={handleNoteAdded} />
+            <CreateNoteForm onNoteAdded={handleClose} />
 
 
 

@@ -1,52 +1,40 @@
-"use client"
+"use client";
+
 import { createClient } from "@/utils/supabase/client";
-// import { createClient } from "@/utils/supabase/server";
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import RealtimeTodos from "./asyncNotes";
-import { Database } from '@/types/supabase'
+import RealtimeNoteUsers from "./asyncNotesUsers";
+import RealtimeTodosChrono from "./renders/noteChrono";
 import AddNoteModal from './noteModal';
-import { Image } from "@nextui-org/react";
 
-
-export default  function Home() {
-  const supabase = createClient();
+export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-  const fetchTodos = async () => {
-    try {
-      const { data: todos, error } = await supabase.from("todos").select("*");
-      if (error) {
-        throw error;
-      }
-      console.log(todos)
-      return todos;
-    } catch (error) {
-      console.error('Error fetching todos:', error.message);
-      return null; // Handle error appropriately
-    }
-  };
-
-
-
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const todos = fetchTodos();
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
 
   return (
-
-    <div className="w-full grin grin-col-2 gap-4">
-      {/* <AddNoteModal isOpen={isModalOpen} onClose={toggleModal} /> */}
-      <div>
-
-         <RealtimeTodos notes={todos ?? []} />
+    <>
+      <AddNoteModal isOpen={isModalOpen} onClose={toggleModal} />
+    <div className="container grid grid-cols-2 gap-4">
+      <div className="mt-5">
+        <h3>My notes</h3>
+        {/* For current user */}
+        <RealtimeTodos />
 
       </div>
+        <div>
+          <h3>Users flow</h3>
+          <RealtimeTodosChrono />
+        </div>
     </div>
-
-
+    </>
   );
 }
