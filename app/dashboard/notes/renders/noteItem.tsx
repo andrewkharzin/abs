@@ -3,10 +3,14 @@
 import React from 'react';
 import { Card, CardHeader, Image, Button, CardFooter, CardBody } from '@nextui-org/react';
 import { Chip } from "@nextui-org/react";
+// import { useRouter } from 'next/router';
 import { Tables } from '@/types/supabase';
 import { useRouter } from "next/navigation";
 import { Database } from '@/types/supabase'
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { CgDetailsMore } from "react-icons/cg";
+import { FaBarsProgress } from "react-icons/fa6";
+import { FaBarsStaggered } from "react-icons/fa6";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer, Avatar} from "@nextui-org/react";
 
 
@@ -16,8 +20,8 @@ interface NoteItemProps {
 }
 
 const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const router = useRouter();
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
 
   const insertedAt = new Date(note.inserted_at);
@@ -47,6 +51,10 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
       <div>{formattedDate.split(',')[0].trim()} {/* Time */}</div>
     </div>
   );
+
+  const handleShowDetail = () => {
+    router.push(`/notes/${note.id}`);
+  };
 
 
   // Construct the correct avatar URL
@@ -96,8 +104,11 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
               <span className="text-xs font-roboto dark:text-cyan-500">{formattedDateTime}</span>
 
           </div>
+        <div className="grid grid-cols-2 gap-4">
 
-        <Button variant="solid" onPress={onOpen} radius="sm" size="sm">Show</Button>
+        <span onClick={onOpen} className='cursor-pointer hover:text-pink-600'><FaBarsProgress size="20px"/></span>
+        <span onClick={handleShowDetail} className='cursor-pointer hover:text-pink-600'><FaBarsStaggered size="20px"/></span>
+        </div>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (
