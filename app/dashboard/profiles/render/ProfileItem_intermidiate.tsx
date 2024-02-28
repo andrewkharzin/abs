@@ -23,13 +23,8 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
 
-  useEffect(() => {
-    // Check local storage for follow status
-    const storedFollowStatus = localStorage.getItem(`follow_status_${profile.id}`);
-    if (storedFollowStatus) {
-      setIsFollowed(JSON.parse(storedFollowStatus));
-    }
 
+  useEffect(() => {
     const fetchCounts = async () => {
       try {
         // Fetch followers count
@@ -47,6 +42,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
     fetchCounts();
   }, [profile.id]);
 
+
   const handleFollowToggle = async () => {
     try {
       const currentUser = await supabase.auth.getUser(); // Fetch the current user synchronously
@@ -61,10 +57,6 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
       const followerId = currentUser.data.user?.id; // Use the UUID of the current user
       const followedId = profile.id;
       setIsFollowed((prev) => !prev);
-
-      // Store follow status in local storage
-      localStorage.setItem(`follow_status_${profile.id}`, JSON.stringify(!isFollowed));
-
       if (!isFollowed) {
         await followProfile(followerId, followedId);
       } else {
@@ -74,7 +66,6 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
       console.error('Error following/unfollowing profile:', error.message);
     }
   };
-
   // Construct the correct avatar URL
   const avatarUrl = profile ? `https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}` : '';
   const username = profile?.username;

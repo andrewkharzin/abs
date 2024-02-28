@@ -6,7 +6,6 @@ import { Database } from '@/types/supabase'; // Ensure to import Profile type
 import { useFollowProfile } from '@/hooks/useFollowProfile';
 import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import getFollowersCount from "./getFollowersCount"
-import getFollowingCount from "./getFollowingCount"
 import useFollowersCountRealtime from './useFollowersCountRealtime';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -16,36 +15,30 @@ interface ProfileItemProps {
   onFollowToggle: () => void; // Add onFollowToggle as a prop
 }
 
-const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =>  {
+const ProfileItem: React.FC<ProfileItemProps> = ({  profile }) =>  {
   const supabase = createClientComponentClient<Database>()
-  const { followProfile, unfollowProfile } = useFollowProfile();
+  const { followProfile, unfollowProfile, isFollowingProfile } = useFollowProfile();
   const [isFollowed, setIsFollowed] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null); // State to store the current user
   const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
 
+
+
+  // useEffect to fetch followers count when profile changes
   useEffect(() => {
-    // Check local storage for follow status
-    const storedFollowStatus = localStorage.getItem(`follow_status_${profile.id}`);
-    if (storedFollowStatus) {
-      setIsFollowed(JSON.parse(storedFollowStatus));
-    }
-
-    const fetchCounts = async () => {
+    const fetchFollowersCount = async () => {
       try {
-        // Fetch followers count
-        const followersCount = await getFollowersCount(profile.id);
-        setFollowersCount(followersCount);
-
-        // Fetch following count
-        const followingCount = await getFollowingCount(profile.id);
-        setFollowingCount(followingCount);
+        // Fetch followers count for the profile
+        // You need to implement getFollowersCount function
+        const count = await getFollowersCount(profile.id);
+        setFollowersCount(count);
       } catch (error) {
-        console.error('Error fetching counts:', error.message);
+        console.error('Error fetching followers count:', error.message);
       }
     };
+    fetchFollowersCount();
+  }, [profile.id]); // Depend on profile.id to fetch count when profile changes
 
-    fetchCounts();
-  }, [profile.id]);
 
   const handleFollowToggle = async () => {
     try {
@@ -61,10 +54,6 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
       const followerId = currentUser.data.user?.id; // Use the UUID of the current user
       const followedId = profile.id;
       setIsFollowed((prev) => !prev);
-
-      // Store follow status in local storage
-      localStorage.setItem(`follow_status_${profile.id}`, JSON.stringify(!isFollowed));
-
       if (!isFollowed) {
         await followProfile(followerId, followedId);
       } else {
@@ -74,7 +63,6 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
       console.error('Error following/unfollowing profile:', error.message);
     }
   };
-
   // Construct the correct avatar URL
   const avatarUrl = profile ? `https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}` : '';
   const username = profile?.username;
@@ -102,8 +90,8 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
       </CardHeader>
       <CardFooter className="gap-3">
         <div className="flex gap-1">
-          <p className="font-semibold text-default-400 text-small">{followingCount}</p>
-          <p className="text-default-400 text-small">Following</p>
+          <p className="font-semibold text-default-400 text-small">{profile.following_count}</p>
+          <p className=" text-default-400 text-small">Following</p>
         </div>
         <div className="flex gap-1">
           <p className="font-semibold text-default-400 text-small">{followersCount}</p>
