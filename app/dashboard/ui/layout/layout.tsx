@@ -7,6 +7,9 @@ import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 // import Navbar from '@/components/ui/Navbar';
 import { getURL } from '@/utils/helpers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 
 interface Props {
@@ -26,18 +29,21 @@ export const Layout = ({ children }: Props) => {
 
 
   return (
-    <SidebarContext.Provider
-      value={{
-        collapsed: sidebarOpen,
-        setCollapsed: handleToggleSidebar,
-      }}
-    >
-      <section className="flex">
-        <SidebarWrapper />
-        <NavbarWrapper>{children}</NavbarWrapper>
-      </section>
+    <QueryClientProvider client={queryClient}>
 
-    </SidebarContext.Provider>
+      <SidebarContext.Provider
+        value={{
+          collapsed: sidebarOpen,
+          setCollapsed: handleToggleSidebar,
+        }}
+      >
+        <section className="flex">
+          <SidebarWrapper />
+          <NavbarWrapper>{children}</NavbarWrapper>
+        </section>
+
+      </SidebarContext.Provider>
+    </QueryClientProvider>
   );
 };
 

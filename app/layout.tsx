@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import 'react-quill/dist/quill.snow.css'
 import { Roboto, Playfair_Display } from "next/font/google";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
 	},
 };
 
+
 export default function RootLayout({
 	children,
 }: {
@@ -53,11 +55,14 @@ export default function RootLayout({
 					fontSans.variable
 				)}
 			>
-				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
 
-							{children}
 
-				</Providers>
+					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+
+								{children}
+
+					</Providers>
+
 				<Suspense>
           <Toaster />
         </Suspense>

@@ -52,8 +52,13 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
     </div>
   );
 
+  // const handleShowDetail = () => {
+  //   router.push(`/notes/${note.id}`);
+
+  // };
+
   const handleShowDetail = () => {
-    router.push(`/notes/${note.id}`);
+    router.push(`/notes/${String(note.id)}`);
   };
 
 

@@ -130,7 +130,7 @@ export default function RealtimeTodos() {
       </div>
         <Divider />
 
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
       {filteredNotes && filteredNotes.length > 0 && filteredNotes.slice().reverse().map(note => (
         <div key={note.id} className="p-4">
           <NoteItem
