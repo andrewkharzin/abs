@@ -8,6 +8,7 @@ import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs
 import getFollowersCount from "./getFollowersCount"
 import getFollowingCount from "./getFollowingCount"
 import useFollowersCountRealtime from './useFollowersCountRealtime';
+import useRealFollow from '@/hooks/useRealFollow';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 interface ProfileItemProps {
@@ -22,6 +23,9 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
   const [isFollowed, setIsFollowed] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  // const isFollowed = useRealFollow({ profileId: profile.id }); // Use the custom hook
 
   useEffect(() => {
     // Check local storage for follow status
@@ -43,9 +47,18 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
         console.error('Error fetching counts:', error.message);
       }
     };
+    const fetchCurrentUser = async () => {
+      try {
+        const currentUser = await supabase.auth.getUser();
+        setCurrentUser(currentUser);
+      } catch (error) {
+        console.error('Error fetching current user:', error.message);
+      }
+    };
 
     fetchCounts();
-  }, [profile.id]);
+    fetchCurrentUser();
+  }, [supabase, profile.id]);
 
   const handleFollowToggle = async () => {
     try {
@@ -78,11 +91,32 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
   // Construct the correct avatar URL
   const avatarUrl = profile ? `https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}` : '';
   const username = profile?.username;
-
   return (
     <Card className="max-w-[340px]">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
+         <Avatar isBordered radius="full" size="md" src={avatarUrl} />
+          <div className="flex flex-col gap-1 items-start justify-center">
+            <h4 className="text-small font-semibold leading-none text-default-600">{profile.full_name}</h4>
+            <h5 className="text-small tracking-tight text-default-400">@{profile.username}</h5>
+          </div>
+        </div>
+      {currentUser?.data.user?.id === profile.id ? ( // Check if the current user is the same as the profile user
+
+          <span className="text-pink-600 text-lg font-bold pl-5">BOSS</span>
+        ) : (
+          <Button
+            className={isFollowed ? 'bg-transparent text-foreground border-default-200' : ''}
+            color="primary"
+            radius="full"
+            size="sm"
+            variant={isFollowed ? 'bordered' : 'solid'}
+            onClick={handleFollowToggle}
+          >
+            {isFollowed ? 'Unfollow' : 'Follow'}
+          </Button>
+        )}
+        {/* <div className="flex gap-5">
           <Avatar isBordered radius="full" size="md" src={avatarUrl} />
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-small font-semibold leading-none text-default-600">{profile.full_name}</h4>
@@ -98,7 +132,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
           onClick={handleFollowToggle}
         >
           {isFollowed ? 'Unfollow' : 'Follow'}
-        </Button>
+        </Button> */}
       </CardHeader>
       <CardFooter className="gap-3">
         <div className="flex gap-1">

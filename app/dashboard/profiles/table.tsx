@@ -38,6 +38,7 @@ export default function ProfilesPage() {
       <>
       <Spacer y={2} />
       <Divider />
+      <Spacer y={4} />
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
         {loading ? (
           <p>Loading...</p>
