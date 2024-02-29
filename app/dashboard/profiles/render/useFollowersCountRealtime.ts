@@ -16,8 +16,7 @@ const useFollowersCountRealtime = (profileId: string): number => {
     // Subscribe to real-time updates for the followers table
     const subscription = supabase
       .channel("realtime followers")
-      .on(
-        "postgres_changes", // Listen specifically for INSERT events
+      .on("postgres_changes", // Listen specifically for INSERT events
         {
           event: "*",
           schema: "public",

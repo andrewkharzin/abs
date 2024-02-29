@@ -12,43 +12,83 @@ const useRealFollow = ({ profileId }: RealFollowProps) => {
   useEffect(() => {
     const fetchFollowStatus = async () => {
       try {
-        const currentUser = supabase.auth.getUser();
+        const currentUser = await supabase.auth.getUser();
 
         if (currentUser) {
-          const { data: followData, error } = await supabase
-            .from('follows')
+          const { data, error } = await supabase
+            .from('followers')
             .select('*')
-            .eq('follower_id', currentUser.id)
-            .eq('followed_id', profileId)
-            .single();
+            .eq('follower_id', currentUser.data.user?.id)
+            .eq('followed_id', profileId);
 
           if (error) {
-            console.error('Error fetching follow status:', error.message);
-            return;
+            throw error;
           }
 
-          setIsFollowed(!!followData); // Convert to boolean
+          if (data.length === 1) {
+            setIsFollowed(true);
+          } else if (data.length === 0) {
+            setIsFollowed(false);
+          } else {
+            console.error('Unexpected multiple rows returned for follow status');
+          }
+
+          const followerId = currentUser.data.user?.id; // Get the follower ID here
+
+          if (followerId) {
+            const followerSubscription = supabase
+              .channel(`followers:follower_id=eq.${followerId}`)
+              .on('*', (payload, context) => {
+                if (context.eventType === 'INSERT' && payload.new.followed_id === profileId) {
+                  setIsFollowed(true);
+                } else if (context.eventType === 'DELETE' && payload.old.followed_id === profileId) {
+                  setIsFollowed(false);
+                }
+              })
+              .subscribe();
+
+            return () => {
+              followerSubscription.unsubscribe();
+            };
+          }
         }
       } catch (error) {
         console.error('Error fetching follow status:', error.message);
       }
     };
 
-    const followerSubscription = supabase
-      .channel(`follows:follower_id=eq.${supabase.auth.getUser()}`)
-      .on('*', (payload, context) => {
-        if (context.eventType === 'INSERT' && payload.new.followed_id === profileId) {
-          setIsFollowed(true);
-        } else if (context.eventType === 'DELETE' && payload.old.followed_id === profileId) {
-          setIsFollowed(false);
+
+    let followerSubscription: any = null; // Initialize followerSubscription
+
+    const subscribeToFollower = async () => {
+      try {
+        const currentUser = await supabase.auth.getUser(); // Await the promise
+
+        if (currentUser) {
+          const followerId = await currentUser.data.user?.id // Await the promise
+          followerSubscription = supabase // Assign to followerSubscription inside the if block
+            .channel(`followers:follower_id=eq.${followerId}`)
+            .on('*', (payload: any, context: any) => { // Define types for payload and context
+              if (context.eventType === 'INSERT' && payload.new.followed_id === profileId) {
+                setIsFollowed(true);
+              } else if (context.eventType === 'DELETE' && payload.old.followed_id === profileId) {
+                setIsFollowed(false);
+              }
+            })
+            .subscribe();
         }
-      })
-      .subscribe();
+      } catch (error) {
+        console.error('Error subscribing to follower:', error.message);
+      }
+    };
 
     fetchFollowStatus();
+    subscribeToFollower();
 
     return () => {
-      followerSubscription.unsubscribe();
+      if (followerSubscription) { // Check if followerSubscription is defined
+        followerSubscription.unsubscribe();
+      }
     };
   }, [supabase, profileId]);
 

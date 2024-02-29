@@ -28,24 +28,31 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
   const isFollowed = useRealFollow({ profileId: profile.id }); // Use the custom hook
 
   useEffect(() => {
+    // Check local storage for follow status
+    const storedFollowStatus = localStorage.getItem(`follow_status_${profile.id}`);
+    if (storedFollowStatus) {
+      setIsFollowed(JSON.parse(storedFollowStatus));
+    }
+
     const fetchCounts = async () => {
       try {
+        // Fetch followers count
         const followersCount = await getFollowersCount(profile.id);
         setFollowersCount(followersCount);
 
+        // Fetch following count
         const followingCount = await getFollowingCount(profile.id);
         setFollowingCount(followingCount);
       } catch (error) {
-        console.error('Error fetching counts:', (error as Error).message);
+        console.error('Error fetching counts:', error.message);
       }
     };
-
     const fetchCurrentUser = async () => {
       try {
         const currentUser = await supabase.auth.getUser();
         setCurrentUser(currentUser);
       } catch (error) {
-        console.error('Error fetching counts:', (error as Error).message);
+        console.error('Error fetching current user:', error.message);
       }
     };
 
@@ -57,6 +64,8 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
     try {
       const currentUser = await supabase.auth.getUser(); // Fetch the current user synchronously
 
+      console.log('Current user in handleFollowToggle:', currentUser); // Log the current user
+
       if (!currentUser || !currentUser.data.user?.id) {
         console.error('Current user not found');
         return;
@@ -64,6 +73,10 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
 
       const followerId = currentUser.data.user?.id; // Use the UUID of the current user
       const followedId = profile.id;
+      setIsFollowed((prev) => !prev);
+
+      // Store follow status in local storage
+      localStorage.setItem(`follow_status_${profile.id}`, JSON.stringify(!isFollowed));
 
       if (!isFollowed) {
         await followProfile(followerId, followedId);
