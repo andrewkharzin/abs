@@ -1,104 +1,43 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
-interface RealFollowProps {
-  profileId: string;
+// Define an interface representing the payload structure
+interface RealtimePayload {
+  new: {
+    followers_count: number;
+  };
 }
 
-const useRealFollow = ({ profileId }: RealFollowProps) => {
+const useFollowersCountRealtime = (profileId: string): number => {
   const supabase = createClient();
-  const [isFollowed, setIsFollowed] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
 
   useEffect(() => {
-    const fetchFollowStatus = async () => {
-      try {
-        const currentUser = await supabase.auth.getUser();
-
-        if (currentUser) {
-          const { data, error } = await supabase
-            .from('followers')
-            .select('*')
-            .eq('follower_id', currentUser.data.user?.id)
-            .eq('followed_id', profileId);
-
-          if (error) {
-            throw error;
-          }
-
-          if (data.length === 1) {
-            setIsFollowed(true);
-          } else if (data.length === 0) {
-            setIsFollowed(false);
-          } else {
-            console.error('Unexpected multiple rows returned for follow status');
-          }
-
-          const followerId = currentUser.data.user?.id; // Get the follower ID here
-
-          if (followerId) {
-            const followerSubscription = supabase
-              .channel(`followers:follower_id=eq.`)
-              .on<any>('INSERT', (payload: any, context: any) => {
-                if (context.payload.new.followed_id === profileId) {
-                  setIsFollowed(true);
-                }
-              })
-              .on<any>('DELETE', (payload: any, context: any) => {
-                if (context.payload.old.followed_id === profileId) {
-                  setIsFollowed(false);
-                }
-              })
-              .subscribe();
-
-            return () => {
-              followerSubscription.unsubscribe();
-            };
-          }
+    // Subscribe to real-time updates for the followers table
+    const subscription = supabase
+      .channel("realtime followers")
+      .on(
+        "postgres_changes", // Listen specifically for INSERT events
+        {
+          event: "*",
+          schema: "public",
+          table: "followers",
+        },
+        (payload: RealtimePayload) => { // Annotate payload with RealtimePayload interface
+          console.log("Realtime change received:", payload);
+          // Extract relevant information from payload and update state accordingly
+          // For example, if payload contains the new count directly:
+          setFollowersCount(payload.new.followers_count);
         }
-      } catch (error) {
-        console.error('Error fetching follow status:', error.message);
-      }
-    };
-
-
-    let followerSubscription: any = null; // Initialize followerSubscription
-
-    const subscribeToFollower = async () => {
-      try {
-        const currentUser = await supabase.auth.getUser(); // Await the promise
-
-        if (currentUser) {
-          const followerId = await currentUser.data.user?.id // Await the promise
-          followerSubscription = supabase // Assign to followerSubscription inside the if block
-            .channel(`followers:follower_id=eq.`)
-            .on<any>('INSERT', (payload: any, context: any) => {
-              if (context.payload.new.followed_id === profileId) {
-                setIsFollowed(true);
-              }
-            })
-            .on<any>('DELETE', (payload: any, context: any) => {
-              if (context.payload.old.followed_id === profileId) {
-                setIsFollowed(false);
-              }
-            })
-            .subscribe();
-        }
-      } catch (error) {
-        console.error('Error subscribing to follower:', error.message);
-      }
-    };
-
-    fetchFollowStatus();
-    subscribeToFollower();
-
+      )
+      .subscribe();
+    // Cleanup subscription on component unmount
     return () => {
-      if (followerSubscription) { // Check if followerSubscription is defined
-        followerSubscription.unsubscribe();
-      }
+      subscription.unsubscribe();
     };
-  }, [supabase, profileId]);
+  }, []);
 
-  return isFollowed;
+  return followersCount;
 };
 
-export default useRealFollow;
+export default useFollowersCountRealtime;
