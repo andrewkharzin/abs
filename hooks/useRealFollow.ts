@@ -37,11 +37,14 @@ const useRealFollow = ({ profileId }: RealFollowProps) => {
 
           if (followerId) {
             const followerSubscription = supabase
-              .channel(`followers:follower_id=eq.${followerId}`)
-              .on('*', (payload, context) => {
-                if (context.eventType === 'INSERT' && payload.new.followed_id === profileId) {
+              .channel(`followers:follower_id=eq.`)
+              .on<any>('INSERT', (payload: any, context: any) => {
+                if (context.payload.new.followed_id === profileId) {
                   setIsFollowed(true);
-                } else if (context.eventType === 'DELETE' && payload.old.followed_id === profileId) {
+                }
+              })
+              .on<any>('DELETE', (payload: any, context: any) => {
+                if (context.payload.old.followed_id === profileId) {
                   setIsFollowed(false);
                 }
               })
@@ -67,11 +70,14 @@ const useRealFollow = ({ profileId }: RealFollowProps) => {
         if (currentUser) {
           const followerId = await currentUser.data.user?.id // Await the promise
           followerSubscription = supabase // Assign to followerSubscription inside the if block
-            .channel(`followers:follower_id=eq.${followerId}`)
-            .on('*', (payload: any, context: any) => { // Define types for payload and context
-              if (context.eventType === 'INSERT' && payload.new.followed_id === profileId) {
+            .channel(`followers:follower_id=eq.`)
+            .on<any>('INSERT', (payload: any, context: any) => {
+              if (context.payload.new.followed_id === profileId) {
                 setIsFollowed(true);
-              } else if (context.eventType === 'DELETE' && payload.old.followed_id === profileId) {
+              }
+            })
+            .on<any>('DELETE', (payload: any, context: any) => {
+              if (context.payload.old.followed_id === profileId) {
                 setIsFollowed(false);
               }
             })
