@@ -107,25 +107,14 @@ export default function RealtimeTodos() {
 
 
   return (
-    // <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-    //   {notes && notes.length > 0 && notes.slice().reverse().map(note => (
-    //     <div key={note.id} className="p-4">
-
-    //       <NoteItem
-    //         key={note.id}
-    //         note={note}
-    //         profile={profiles.find(profile => profile.id === note.user_id)}
-    //       />
-    //     </div>
-    //   ))}
-
-    // </div>
+   
     <>
        <Spacer y={2} />
      <div className="flex space-x-2 mb-4">
         <Button size="sm" variant="ghost" radius="sm"  onClick={() => handleFilterSelect('all')}>All</Button>
         <Button size="sm" variant="solid" color="danger" radius="sm"  onClick={() => handleFilterSelect('URGENT')}>URGENT</Button>
         <Button size="sm" variant="ghost" radius="sm"  onClick={() => handleFilterSelect('COMMON')}>COMMON</Button>
+        <Button size="sm" variant="ghost" radius="sm"  onClick={() => handleFilterSelect('SHIFT')}>SHIFT</Button>
         {/* Add more buttons for other categories */}
       </div>
         <Divider />

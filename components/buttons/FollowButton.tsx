@@ -104,10 +104,12 @@ export const FollowButton = ({ profileId }: Props) => {
 
   return (
     <Button
-      color={isFollowing ? 'error' : 'primary'}
+      color={isFollowing ? 'error' : 'success'}
       onClick={isFollowing ? handleUnfollow : handleFollow}
       size="sm"
       radius="sm"
+      variant={isFollowing ? 'filled' : 'ghost'} // Use 'filled' for follow, 'ghost' for unfollow
+      // color={isFollowing ? 'danger' : undefined} // Set color to 'danger' for unfollow
     >
       {isFollowing ? 'Unfollow' : 'Follow'}
     </Button>

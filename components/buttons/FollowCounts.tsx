@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Spacer, Divider} from "@nextui-org/react"
 
 interface Props {
   profileId: string;
@@ -89,12 +90,14 @@ export const FollowCounts = ({ profileId }: Props) => {
 
   return (
     <>
+      {/* <Divider />
+      <Spacer y={2} /> */}
       <div className="flex gap-1">
-        <p className="font-semibold text-default-400 text-small">{counts.followingCount}</p>
+        <p className="font-bold font-mono dark:text-pink-600 text-pink-700 text-sm">{counts.followingCount}</p>
         <p className="text-default-400 text-small">Following</p>
       </div>
       <div className="flex gap-1">
-        <p className="font-semibold text-default-400 text-small">{counts.followersCount}</p>
+        <p className="font-bold font-mono dark:text-pink-600 text-pink-700 text-sm">{counts.followersCount}</p>
         <p className="text-default-400 text-small">Followers</p>
       </div>
     </>

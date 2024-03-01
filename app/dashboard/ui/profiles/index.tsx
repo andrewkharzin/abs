@@ -15,7 +15,7 @@ import { AddUser } from "./add-user";
 export const Profiles = () => {
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
-      <ul className="flex">
+      <ul className="flex px-2">
         <li className="flex gap-2">
           <HouseIcon />
           <Link href={"/"}>
@@ -26,7 +26,7 @@ export const Profiles = () => {
 
         <li className="flex gap-2">
           <UsersIcon />
-          <span>Users</span>
+          <span>Profiles</span>
           <span> / </span>{" "}
         </li>
         <li className="flex gap-2">
@@ -34,8 +34,8 @@ export const Profiles = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">All Accounts</h3>
-      <div className="flex justify-between flex-wrap gap-4 items-center">
+      <h3 className="text-xl font-semibold px-2">All Accounts</h3>
+      <div className="flex justify-between flex-wrap gap-4 items-center px-2">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
           <Input
             classNames={{
@@ -50,10 +50,7 @@ export const Profiles = () => {
           <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddUser />
-          <Button color="primary" startContent={<ExportIcon />}>
-            Export to CSV
-          </Button>
+
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">

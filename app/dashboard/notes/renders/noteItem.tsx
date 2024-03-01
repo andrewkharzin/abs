@@ -104,7 +104,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
             />
             <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-small font-semibold leading-none text-default-600 mb-0">{username}</h4>
-            <Chip variant="dot" size='sm' radius="sm" color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
+            <Chip variant="dot" className="uppercase font-roboto text-xs text-default-400" size='sm' radius="sm" color={note.category === 'URGENT' ? 'danger' : note.category === 'SHIFT' ? 'warning' : 'success'}>{note.category}</Chip>
             </div>
               <span className="text-xs font-roboto dark:text-cyan-500">{formattedDateTime}</span>
 

@@ -49,16 +49,16 @@ export const SidebarWrapper = () => {
             />
             <SidebarMenu title="Main Menu">
               <SidebarItem
-                isActive={pathname === "/accounts"}
-                title="Accounts"
+                isActive={pathname === "/profiles"}
+                title="Profiles"
                 icon={<AccountsIcon />}
-                href="accounts"
+                href="profiles"
               />
-              {/* <SidebarItem
-                isActive={pathname === "/payments"}
-                title="Payments"
+              <SidebarItem
+                isActive={pathname === "/notes"}
+                title="Notes"
                 icon={<PaymentsIcon />}
-              /> */}
+              />
               {/* <CollapseItems
                 icon={<BalanceIcon />}
                 items={["Banks Accounts", "Credit Cards", "Loans"]}
@@ -82,7 +82,7 @@ export const SidebarWrapper = () => {
               /> */}
             </SidebarMenu>
 
-            <SidebarMenu title="General">
+            {/* <SidebarMenu title="General">
               <SidebarItem
                 isActive={pathname === "/developers"}
                 title="Developers"
@@ -98,15 +98,15 @@ export const SidebarWrapper = () => {
                 title="Settings"
                 icon={<SettingsIcon />}
               />
-            </SidebarMenu>
+            </SidebarMenu> */}
 
-            <SidebarMenu title="Updates">
+            {/* <SidebarMenu title="Updates">
               <SidebarItem
                 isActive={pathname === "/changelog"}
                 title="Changelog"
                 icon={<ChangeLogIcon />}
               />
-            </SidebarMenu>
+            </SidebarMenu> */}
           </div>
           <div className={Sidebar.Footer()}>
             <Tooltip content={"Settings"} color="primary">
