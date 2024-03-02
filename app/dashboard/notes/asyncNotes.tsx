@@ -96,6 +96,25 @@ export default function RealtimeTodos() {
   }, [supabase, router]);
 
 
+  // Определите функцию onShare в родительском компоненте
+  const handleShareNote = async (noteId: number, userId: string) => {
+    try {
+      let { data, error } = await supabase
+        .rpc('share_todo', {
+          todo_id: noteId,
+          user_id: userId
+        });
+
+        console.log("Share to do item", data);
+      if (error) {
+        throw error;
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
    // Filter notes based on the selected filter
    const filteredNotes = selectedFilter === 'all' ? notes : notes.filter(note => note.category === selectedFilter);
@@ -107,7 +126,7 @@ export default function RealtimeTodos() {
 
 
   return (
-   
+
     <>
        <Spacer y={2} />
      <div className="flex space-x-2 mb-4">
@@ -126,6 +145,7 @@ export default function RealtimeTodos() {
             key={note.id}
             note={note}
             profile={profiles.find(profile => profile.id === note.user_id)}
+            onShare={handleShareNote} // Добавьте этот пропс
           />
         </div>
       ))}

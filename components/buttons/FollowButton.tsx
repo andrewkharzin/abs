@@ -1,5 +1,3 @@
-// FollowButton.tsx
-
 import { useState, useEffect } from 'react';
 import { Button } from '@nextui-org/react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -16,12 +14,10 @@ export const FollowButton = ({ profileId }: Props) => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
         setCurrentUser(user);
       } catch (error) {
-        console.error('Error fetching counts:', (error as Error).message);
+        console.error('Error fetching current user:', error.message);
       }
     };
 
@@ -50,16 +46,16 @@ export const FollowButton = ({ profileId }: Props) => {
         return;
       }
 
-      const { count, error } = await supabase
-        .from('followers')
-        .select('*', { count: 'exact' })
-        .eq('follower_id', currentUser.id)
-        .eq('followed_id', profileId);
+      try {
+        const { count } = await supabase
+          .from('followers')
+          .select('*', { count: 'exact' })
+          .eq('follower_id', currentUser.id)
+          .eq('followed_id', profileId);
 
-      if (error) {
-        console.error(error);
-      } else {
         setIsFollowing(count > 0);
+      } catch (error) {
+        console.error('Error fetching follow status:', error.message);
       }
     };
 
@@ -72,14 +68,11 @@ export const FollowButton = ({ profileId }: Props) => {
       return;
     }
 
-    const { error } = await supabase
-      .from('followers')
-      .insert([{ follower_id: currentUser.id, followed_id: profileId }]);
-
-    if (error) {
-      console.error(error);
-    } else {
+    try {
+      await supabase.from('followers').insert([{ follower_id: currentUser.id, followed_id: profileId }]);
       setIsFollowing(true);
+    } catch (error) {
+      console.error('Error following user:', error.message);
     }
   };
 
@@ -89,16 +82,15 @@ export const FollowButton = ({ profileId }: Props) => {
       return;
     }
 
-    const { error } = await supabase
-      .from('followers')
-      .delete()
-      .eq('follower_id', currentUser.id)
-      .eq('followed_id', profileId);
-
-    if (error) {
-      console.error(error);
-    } else {
+    try {
+      await supabase
+        .from('followers')
+        .delete()
+        .eq('follower_id', currentUser.id)
+        .eq('followed_id', profileId);
       setIsFollowing(false);
+    } catch (error) {
+      console.error('Error unfollowing user:', error.message);
     }
   };
 
@@ -108,8 +100,7 @@ export const FollowButton = ({ profileId }: Props) => {
       onClick={isFollowing ? handleUnfollow : handleFollow}
       size="sm"
       radius="sm"
-      variant={isFollowing ? 'filled' : 'ghost'} // Use 'filled' for follow, 'ghost' for unfollow
-      // color={isFollowing ? 'danger' : undefined} // Set color to 'danger' for unfollow
+      variant={isFollowing ? 'filled' : 'ghost'}
     >
       {isFollowing ? 'Unfollow' : 'Follow'}
     </Button>

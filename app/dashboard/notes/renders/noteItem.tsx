@@ -1,27 +1,40 @@
 'use client'
 
-import React from 'react';
-import { Card, CardHeader, Image, Button, CardFooter, CardBody } from '@nextui-org/react';
+import React, { useEffect, useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
+import { Card, CardHeader, Image, Button, CardFooter, CardBody, User } from '@nextui-org/react';
 import { Chip } from "@nextui-org/react";
 // import { useRouter } from 'next/router';
 import { Tables } from '@/types/supabase';
 import { useRouter } from "next/navigation";
 import { Database } from '@/types/supabase'
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaShare } from "react-icons/fa";
 import { CgDetailsMore } from "react-icons/cg";
 import { FaBarsProgress } from "react-icons/fa6";
 import { FaBarsStaggered } from "react-icons/fa6";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer, Avatar} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spacer, Avatar, Select, SelectItem} from "@nextui-org/react";
+import { supabase } from '@supabase/auth-ui-shared';
+import UserItem from "./UserItem";
 
 
 interface NoteItemProps {
   note: Tables<'todos'>;
   profile: Tables<'profiles'>;
+  onShare: (noteId: number, userId: string) => void;
+  // user: Tables<>
 }
 
-const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
+// type Profile = Database['public']['Tables']['profiles']['Row'];
+// interface ProfileItemProps {
+//   profile: Profile;
+//   isFollowed: boolean; // Add isFollowed as a prop
+//   onFollowToggle: () => void; // Add onFollowToggle as a prop
+// }
+
+const NoteItem: React.FC<NoteItemProps> = ({ note, profile, onShare }) => {
   const router = useRouter();
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 
   const insertedAt = new Date(note.inserted_at);
@@ -61,11 +74,13 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
     router.push(`/notes/${String(note.id)}`);
   };
 
+  const handleShare = () => {
+    onShare(note.id, profile.id);
+  };
 
-  // Construct the correct avatar URL
+
   const avatarUrl = profile ? `https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${profile.avatar_url}` : '';
-  const username = profile?.username
-
+  const username = profile?.username;
   return (
     <Card key={note.id}
           isFooterBlurred
@@ -124,13 +139,16 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile }) => {
                   <p>
                      {note.content}
                   </p>
-                </article>
-
+                  </article>
+                  <UserItem profile={profile} />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
-                </Button>
+                  </Button>
+                  <div>
+                    <Button size="mini" variant="ghost" onClick={handleShare}><FaShare /></Button>
+                  </div>
               </ModalFooter>
             </>
           )}

@@ -9,6 +9,7 @@ import { GoTasklist } from "react-icons/go";
 import AddNoteModal from './noteModal';
 import {Tabs, Tab, Card, CardBody, CardHeader, Button} from "@nextui-org/react";
 import Skeleton from "./loading/note_skeleton"
+import ShareToMe from "./renders/SharedToMe"
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,10 +64,10 @@ export default function Home() {
 
 
       </Tab>
-      <Tab key="videos" title="Videos">
+      <Tab key="e" title="SharedToMe">
         <Card>
           <CardBody>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <ShareToMe />
           </CardBody>
         </Card>
       </Tab>

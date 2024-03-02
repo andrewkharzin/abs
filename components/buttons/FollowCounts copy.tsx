@@ -1,6 +1,9 @@
+//FollowCounts.tsx
+
+
 import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Spacer, Divider } from '@nextui-org/react';
+import { Spacer, Divider} from "@nextui-org/react"
 
 interface Props {
   profileId: string;
@@ -50,10 +53,9 @@ export const FollowCounts = ({ profileId }: Props) => {
           followersCount,
         });
 
-        // Listen for real-time updates
         const subscription = supabase
           .channel('realtime followers')
-          .on('postgres_changes', (payload: RealtimePayload) => {
+          .on('INSERT', (payload: RealtimePayload) => {
             console.log('Real-time update received:', payload);
             if (payload.new.followed_id === profileId) {
               setCounts((prevCounts) => ({
@@ -73,10 +75,10 @@ export const FollowCounts = ({ profileId }: Props) => {
 
         return () => {
           console.log('Unsubscribing...');
-          subscription.unsubscribe();
+          supabase.removeChannel(subscription);
         };
       } catch (error) {
-        console.error('Error fetching counts:', error.message);
+        console.error('Error fetching counts:', (error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -85,7 +87,10 @@ export const FollowCounts = ({ profileId }: Props) => {
     fetchCounts();
   }, [supabase, profileId]);
 
-  // Remove loading condition as we want to display counts immediately
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       {/* <Divider />

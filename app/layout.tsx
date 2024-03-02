@@ -57,11 +57,11 @@ export default function RootLayout({
 			>
 
 
+
 					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+          	{children}
+		    	</Providers>
 
-								{children}
-
-					</Providers>
 
 				<Suspense>
           <Toaster />

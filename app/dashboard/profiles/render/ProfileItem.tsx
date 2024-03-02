@@ -9,6 +9,8 @@ import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs
 import { FollowButton } from "../../../../components/buttons/FollowButton";
 // import { ProfileCard } from "../../../../components/buttons/FollowButton";
 import { FollowCounts } from '../../../../components/buttons/FollowCounts';
+import { FollowButtonAndCounts } from '../../../../components/buttons/FollowButtonAndCounts';
+
 
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -30,7 +32,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
   const username = profile?.username;
   const currentUser = supabase.auth.getUser()
   return (
-    <Card className="w-full" shadow="sm">
+    <Card className="w-full h-[200px]" shadow="sm">
       <CardHeader className="justify-between">
         <div className="flex gap-4">
          <Avatar isBordered color="danger" radius="sm" size="lg" src={avatarUrl} />
@@ -39,23 +41,15 @@ const ProfileItem: React.FC<ProfileItemProps> = ({ profile,  onFollowToggle }) =
             <h5 className="text-small tracking-tight text-default-400">@{profile.username}</h5>
           </div>
         </div>
-
-
-
-
-
-            <div>
-
-
-              <FollowButton profileId={profile.id} />
-
-            </div>
+          <div>
+            {/* <FollowButton profileId={profile.id} /> */}
+          </div>
 
       </CardHeader>
       <CardFooter className="gap-3">
         {/* <Divider /> */}
         {/* <Spacer y={2} /> */}
-        <FollowCounts profileId={profile.id} />
+        <FollowButtonAndCounts profileId={profile.id} />
       </CardFooter>
     </Card>
   );
