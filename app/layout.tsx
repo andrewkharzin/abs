@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { PropsWithChildren, Suspense } from 'react';
-import { Toaster } from '@/components/ui/Toasts/toaster';
+import { ToastProvider } from './toast-provider'
 import { Providers } from "./providers";
 import clsx from "clsx";
 
@@ -57,15 +57,17 @@ export default function RootLayout({
 			>
 
 
+				<ToastProvider>
 
 					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           	{children}
 		    	</Providers>
+				</ToastProvider>
 
 
-				<Suspense>
+				{/* <Suspense>
           <Toaster />
-        </Suspense>
+        </Suspense> */}
 			</body>
 		</html>
 	);

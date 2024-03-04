@@ -4,7 +4,7 @@ import { NavbarWrapper } from "../navbar/navbar";
 import { SidebarWrapper } from "../sidebar/sidebar";
 import { SidebarContext } from "./layout-context";
 import { Toaster } from '@/components/ui/Toasts/toaster';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 import store from '../../../../redux/store';
 import { PropsWithChildren, Suspense } from 'react';
 // import Navbar from '@/components/ui/Navbar';
@@ -31,7 +31,7 @@ export const Layout = ({ children }: Props) => {
 
 
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
 
     <QueryClientProvider client={queryClient}>
 
@@ -48,7 +48,7 @@ export const Layout = ({ children }: Props) => {
 
       </SidebarContext.Provider>
     </QueryClientProvider>
-    </Provider>
+    // </Provider>
   );
 };
 

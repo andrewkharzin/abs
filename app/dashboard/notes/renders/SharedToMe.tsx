@@ -1,7 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Divider } from "@nextui-org/react";
+import {
+  Divider,
+  Card,
+  CardFooter,
+  CardHeader,
+  Chip,
+  CardBody,
+  Spacer,
+} from "@nextui-org/react";
 
 interface Note {
   id: number;
@@ -22,11 +30,45 @@ const SharedNoteItem: React.FC<SharedNoteItemProps> = ({ note }) => {
   console.log("Note data:", note); // Log the note object
   return (
     <div>
-      TEst
-      {/* Отображение данных разделенной заметки */}
-      <h3>{note.category}</h3>
-      <p>{note.content}</p>
-      {/* Другие данные */}
+      <Card key={note.id} isFooterBlurred className="max-w-full" shadow="sm">
+        <CardHeader className="flex justify-between ">
+          <div className="flex-none w-14">
+            <h3>{note.category}</h3>
+          </div>
+
+          <div className="order-last mr-2"></div>
+        </CardHeader>
+        <CardBody>
+          <p className="font-light text-base font-roboto text-md">
+            {note.content}
+          </p>
+        </CardBody>
+        <Spacer y={10} />
+        <CardFooter className="justify-between">
+          <div className="flex gap-5">
+            <div className="flex flex-col gap-1 items-start justify-center">
+              <Chip
+                variant="dot"
+                className="uppercase font-roboto text-xs text-default-400"
+                size="sm"
+                radius="sm"
+                color={
+                  note.category === "URGENT"
+                    ? "danger"
+                    : note.category === "SHIFT"
+                    ? "warning"
+                    : "success"
+                }
+              >
+                {note.category}
+              </Chip>
+
+              <Spacer y={2} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4"></div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
@@ -37,54 +79,62 @@ const ShareToMe: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchSharedNotes = async () => {
-      try {
-        const { data: sharedNotesData, error: sharedNotesError } = await supabase
-          .from('todos_shared')
-          .select('*')
-          .order('id', { ascending: true });
+    const fetchTodos = async () => {
+      const supabase = createClient()
+      const userId = supabase.auth.getUser();
 
-        if (sharedNotesError) {
-          throw sharedNotesError;
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('todos')
+          .select(`
+            id,
+            user_id AS creator_id,
+            title,
+            content,
+            category,
+            shared_to: todo_shared!shared_to ( shared_to )
+          `)
+          .or(`user_id.eq.${userId},todo_shared.shared_to.eq.${userId}`)
+          .order('id', { ascending: true });
+        console.log(data)
+        if (error) {
+          throw error;
         }
 
-        if (sharedNotesData) {
-          const todoIds = sharedNotesData.map(note => note.todo_id);
-          const { data: todosData, error: todosError } = await supabase
-            .from('todos')
-            .select('*')
-            .in('id', todoIds)
-            .order('id', { ascending: true });
-
-          if (todosError) {
-            throw todosError;
-          }
-
-          if (todosData) {
-            setSharedNotes(todosData);
-            setLoading(false);
-          }
+        if (data) {
+          setSharedNotes(data);
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Ошибка при получении данных:', error.message);
+        console.error('Error fetching todos:', error.message);
         setLoading(false);
       }
     };
 
+    fetchTodos();
+
     const handleRealtimeChanges = () => {
       const channel = supabase
-        .channel("realtime todos_shared")
-        .on("postgres_changes", { event: "*", schema: "public", table: "todos_shared" }, (payload) => {
-          console.log("Изменения в реальном времени:", payload);
-          fetchSharedNotes();
-        })
+        .channel("realtime todo_shared")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "todo_shared" },
+          (payload) => {
+            console.log("Изменения в реальном времени:", payload);
+            fetchTodos();
+          }
+        )
         .subscribe();
       return () => {
         supabase.removeChannel(channel);
       };
     };
 
-    fetchSharedNotes();
     const unsubscribe = handleRealtimeChanges();
 
     return () => {
@@ -94,29 +144,25 @@ const ShareToMe: React.FC = () => {
 
   return (
     <>
-    {loading ? (
-      <div>Loading...</div>
-    ) : (
-      <div>
-        {/* Отображение разделенных заметок */}
-        {sharedNotes && sharedNotes.length > 0 ? (
-          sharedNotes.map(note => (
-            <div key={note.id} className="p-4">
-              <SharedNoteItem
-                key={note.id}
-                note={note}
-              />
-              <Divider />
-            </div>
-          ))
-        ) : (
-          <p>Нет разделенных заметок.</p>
-        )}
-      </div>
-    )}
-  </>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          {/* Отображение разделенных заметок */}
+          {sharedNotes && sharedNotes.length > 0 ? (
+            sharedNotes.map((note) => (
+              <div key={note.id} className="p-4">
+                <SharedNoteItem key={note.id} note={note} />
+                <Divider />
+              </div>
+            ))
+          ) : (
+            <p>Нет разделенных заметок.</p>
+          )}
+        </div>
+      )}
+    </>
   );
 };
-
 
 export default ShareToMe;
