@@ -41,7 +41,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onNoteAdde
   return (
     <>
       {/* Button to open the modal */}
-      <Button color="danger" size="sm" variant="flat" radius="sm" onClick={onClose}>Add Note</Button>
+      <Button color="success" className="ml-2" size="sm" variant="solid" radius="sm" onClick={onClose}>Add Note</Button>
       <Spacer y={4} />
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={onClose}>

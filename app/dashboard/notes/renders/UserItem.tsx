@@ -26,13 +26,40 @@ const UserItem: React.FC<UserItemProps> = ({ profile, selectedUsers, setSelected
   //   return null;
   // }
 
+  //User sekect v1
+  // const handleUserSelect = () => {
+  //   if (isUserSelected) {
+  //     setSelectedUsers(selectedUsers.filter((user) => user.id !== profile.id));
+  //   } else {
+  //     setSelectedUsers([...selectedUsers, profile]);
+  //   }
+  // };
+
+  // const handleUserSelect = () => {
+  //   console.log('Previous Selected Users:', selectedUsers);
+  //   console.log('Profile ID:', profile.id);
+
+  //   if (isUserSelected) {
+  //     setSelectedUsers(prevSelectedUsers => prevSelectedUsers.filter(user => user.id !== profile.id));
+  //   } else {
+  //     setSelectedUsers(prevSelectedUsers => [...prevSelectedUsers, profile]);
+  //   }
+  // };
   const handleUserSelect = () => {
-    if (isUserSelected) {
-      setSelectedUsers(selectedUsers.filter((user) => user.id !== profile.id));
+    const isUserAlreadySelected = selectedUsers.some((user) => user.id === profile.id);
+
+    if (isUserAlreadySelected) {
+      setSelectedUsers(prevSelectedUsers => prevSelectedUsers.filter(user => user.id !== profile.id));
     } else {
-      setSelectedUsers([...selectedUsers, profile]);
+      setSelectedUsers(prevSelectedUsers => [...prevSelectedUsers, profile]);
     }
   };
+
+
+
+
+
+
   useEffect(() => {
     const fetchProfiles = async () => {
       const supabase = createClient();

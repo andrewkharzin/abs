@@ -126,7 +126,7 @@ export default function RealtimeTodos() {
   return (
     <>
       <Spacer y={2} />
-      <div className="flex space-x-2 mb-4">
+      <div className="flex space-x-2 mb-4 ml-2">
         <Button
           size="sm"
           variant="ghost"

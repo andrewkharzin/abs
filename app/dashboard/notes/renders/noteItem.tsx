@@ -15,6 +15,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure,
 import { supabase } from '@supabase/auth-ui-shared';
 import UserItem from "./UserItem";
 import GradientMask from './gradientMask';
+import MultiUserSelector from './MultiUserSelector';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -54,23 +55,6 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile, onShare }) => {
     hour12: false
   }).replace(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})/, "$1/$2/$3 $4:$5");
 
-  // // Splitting the formattedDate into its components
-  // const [datePart, timePart] = formattedDate.split(', ');
-  // let [day, month, year] = datePart.split(' ');
-  // if (month === 'undefined') {
-  //   // If month is undefined, set it to an empty string
-  //   month = '';
-  // }
-  // const time = timePart.slice(0, -3); // Removing seconds from the time
-
-  // // Format the date with calendar and clock icons
-  // const formattedDateTime = (
-  //   <div className="flex flex-row">
-  //     <div className="mt-0"><FaRegCalendarAlt /></div>
-  //     <div className='mx-2'>{formattedDate.split(',')[1].trim()} {/* Date */}</div>
-  //     <div>{formattedDate.split(',')[0].trim()} {/* Time */}</div>
-  //   </div>
-  // );
 
 
   const handleShowDetail = () => {
@@ -83,7 +67,7 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile, onShare }) => {
 
   const handleClick = () => {
     console.log('Share button clicked');
-    onShare(note.id, profile.id);
+    onShare(note.id, profile.id, selectedUsers);
 
     setIsLoading(true);
     setShowMessage(false);
@@ -171,15 +155,21 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile, onShare }) => {
                 <ModalBody>
                   <div className="flex flex-col">
                     <div>
-              
+
                     </div>
                     <div>
                     <span className="text-tiny text-base">Assign to</span>
-                    <Spacer y={2} />
-                    <UserItem profile={profile} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}/>
+                        <Spacer y={2} />
+                      {/* Replace UserItem with MultiUserSelector */}
+                <MultiUserSelector onSelect={setSelectedUsers} />
+                    {/* <UserItem profile={profile} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}/> */}
 
                       </div>
                       <Spacer y={2} />
+                      {/* Display selected users' avatars */}
+                      <div className="flex gap-2">
+
+                      </div>
 
 
 
@@ -206,38 +196,27 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, profile, onShare }) => {
 
                   </div>
               </ModalBody>
-                  <ModalFooter>
-                  <div className=''>
-                        {/* <div className="flex gap-2">
-                            {selectedUsers.map((user) => (
-                              <Avatar
-                                key={user.id}
-                                alt={user.username}
-                                className="flex-shrink-0"
-                                size="sm"
-                                src={`https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}`}
-                                />
-                                ))}
-                              </div> */}
-                          {/* Test user images */}
-                          <div className="flex gap-4 items-center">
-                            <Avatar isBordered size="sm" color="danger" src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-                            <Avatar isBordered src="https://i.pravatar.cc/150?u=a04258a2462d826712d" />
-                            <Avatar isBordered src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                            <Avatar isBordered src="https://i.pravatar.cc/150?u=a04258114e29026302d" />
-                            <Avatar isBordered src="https://i.pravatar.cc/150?u=a04258114e29026702d" />
-                            <Avatar isBordered src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
-                          </div>
-
+              <ModalFooter>
+              <div className="flex flex-col">
+                  <div className="flex gap-4 flex-wrap-reverse">
+                    {selectedUsers.map((user) => (
+                      <Avatar
+                        key={user.id}
+                        alt={user.username}
+                        isBordered
+                        size="sm"
+                        color="violet"
+                        radius="sm"
+                        src={`https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}`}
+                      />
+                    ))}
                   </div>
-                  <div className="grid grid-cols-2">
-                      <div>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                          Close
-                          </Button>
-
-                     </div>
+                  <div className="mt-4">
+                    <Button color="danger" variant="light" onClick={onClose}>
+                      Close
+                    </Button>
                   </div>
+                </div>
               </ModalFooter>
             </>
           )}
