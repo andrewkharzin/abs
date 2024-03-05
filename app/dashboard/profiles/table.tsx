@@ -47,6 +47,7 @@ export default function ProfilesPage() {
         ) : (
           profiles.map(profile => (
             <div key={profile.id}>
+
               <ProfileItem profile={profile} />
               <Spacer y={2} />
             </div>

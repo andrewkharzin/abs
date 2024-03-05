@@ -42,6 +42,7 @@ export default function RealtimeTodos() {
           throw todosError;
         }
         if (todosData) {
+          console.log("todos Data", todosData)
           setNotes(todosData);
         }
 

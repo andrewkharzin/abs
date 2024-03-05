@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Select, SelectItem } from '@nextui-org/react';
+import { Avatar, Select, SelectItem, Spacer } from '@nextui-org/react';
 import { Database } from '@/types/supabase'; // Ensure to import Profile type
 import { createClient } from '@/utils/supabase/client'; // Import your Supabase client
 
@@ -71,17 +71,20 @@ const MultiUserSelector: React.FC<MultiUserSelectorProps> = ({ onSelect }) => {
           </SelectItem>
         ))}
       </Select>
-      {/* <div>
+      <Spacer y={4} />
+      <div className="flex flex-row gap-4">
         {selectedUsers.map((user) => (
           <Avatar
             key={user.id}
             alt={user.username}
-            className="flex-shrink-0"
+            isBordered
             size="sm"
-            src={user.avatar_url}
+            color="danger"
+            radius="full"
+            src={`https://teureaztessldmmncynq.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}`}
           />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
