@@ -1,0 +1,53 @@
+import { Button, Input } from "@nextui-org/react";
+import Link from "next/link";
+import React from "react";
+import { DotsIcon } from "@/app/dashboard/ui/icons/accounts/dots-icon";
+import { ExportIcon } from "@/app/dashboard/ui/icons/accounts/export-icon";
+import { InfoIcon } from "@/app/dashboard/ui/icons/accounts/info-icon";
+import { TrashIcon } from "@/app/dashboard/ui/icons/accounts/trash-icon";
+import { HouseIcon } from "@/app/dashboard/ui/icons/breadcrumb/house-icon";
+import { UsersIcon } from "@/app/dashboard/ui/icons/breadcrumb/users-icon";
+import { NoteDetails } from "./NoteDetailPage";
+import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/react";
+
+export const Note = () => {
+  return (
+    <>
+        <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4 px-2">
+
+          <Breadcrumbs isDisabled>
+            <BreadcrumbItem>Home</BreadcrumbItem>
+            <BreadcrumbItem>Notes</BreadcrumbItem>
+          </Breadcrumbs>
+          <h4 className="text-lg font-bold">My Notes</h4>
+          <div className="flex justify-between flex-wrap gap-4 items-center">
+            <div className="flex items-center gap-3 flex-wrap md:flex-nowrap px-2">
+              <Input
+                classNames={{
+                  input: "w-full",
+                  mainWrapper: "w-full",
+                }}
+                placeholder="Search users"
+              />
+              {/* <SettingsIcon /> */}
+              <TrashIcon />
+              <InfoIcon />
+              <DotsIcon />
+            </div>
+            <div className="flex flex-row gap-3.5 flex-wrap">
+              {/* <AddUser /> */}
+
+            </div>
+          </div>
+          <div className="max-w-[95rem] mx-auto w-full">
+
+            <NoteDetails note={note}/>
+
+          </div>
+        </div>
+    </>
+
+  );
+};
+
+export default Note;

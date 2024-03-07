@@ -10,6 +10,7 @@ import AddNoteModal from './noteModal';
 import {Tabs, Tab, Card, CardBody, CardHeader, Button} from "@nextui-org/react";
 import Skeleton from "./loading/note_skeleton"
 import ShareToMe from "./renders/SharedToMe"
+import MyShares from "./renders/MyShares";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,6 +69,13 @@ export default function Home() {
         <Card>
           <CardBody>
           <ShareToMe />
+          </CardBody>
+        </Card>
+      </Tab>
+      <Tab key="c" title="My Shares">
+        <Card>
+          <CardBody>
+             <MyShares />
           </CardBody>
         </Card>
       </Tab>

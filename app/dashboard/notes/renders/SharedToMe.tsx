@@ -80,7 +80,7 @@ const ShareToMe: React.FC = () => {
 
   useEffect(() => {
     const fetchTodos = async () => {
-      const supabase = createClient()
+      const supabase = createClient();
       const userId = supabase.auth.getUser();
 
       if (!userId) {
@@ -89,19 +89,22 @@ const ShareToMe: React.FC = () => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('todos')
-          .select(`
+        const { data, error } = await supabase.from("todos").select(`
             id,
-            user_id AS creator_id,
             title,
             content,
             category,
-            shared_to: todo_shared!shared_to ( shared_to )
-          `)
-          .or(`user_id.eq.${userId},todo_shared.shared_to.eq.${userId}`)
-          .order('id', { ascending: true });
-        console.log(data)
+            user_id,
+            todo_shares (
+              todo_id,
+              shared_by,
+              shared_to
+            )
+            `);
+        // .eq('user_id', "todo_shares:shared_to")
+        // .or(`todo_shares.shared_to.eq.${userId}`);
+
+        console.log("Todos data:", data);
         if (error) {
           throw error;
         }
@@ -111,13 +114,10 @@ const ShareToMe: React.FC = () => {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching todos:', error.message);
+        console.error("Error fetching todos:", error.message);
         setLoading(false);
       }
     };
-
-    fetchTodos();
-
     const handleRealtimeChanges = () => {
       const channel = supabase
         .channel("realtime todo_shared")
@@ -138,6 +138,7 @@ const ShareToMe: React.FC = () => {
     const unsubscribe = handleRealtimeChanges();
 
     return () => {
+      fetchTodos();
       unsubscribe();
     };
   }, [supabase, router]);

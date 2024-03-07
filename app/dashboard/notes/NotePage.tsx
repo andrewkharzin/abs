@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
-import NoteDetails from '@/components/notes/NoteDetailPage';
+import NoteDetails from './renders/NoteDetails';
 
 type Note = Database['public']['Tables']['todos']['Row'];
 

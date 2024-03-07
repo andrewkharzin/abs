@@ -11,6 +11,7 @@ type Profile = Database['public']['Tables']['profiles']['Row']
 
 export default function ProfilesPage() {
   const supabase = createClient();
+
   const router = useRouter();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

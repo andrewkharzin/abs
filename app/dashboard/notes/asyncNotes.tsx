@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Text,
+} from "@nextui-org/react";
 import NoteItem from "./renders/noteItem";
 import { useRouter } from "next/navigation";
 import { Tables } from "@/types/supabase";
 import TodoTimeline from "./renders/noteChrono";
 import { Button, Divider, Spacer } from "@nextui-org/react";
 import NoteSkeleton from "./loading/note_skeleton";
+import NoteDeleteModal from "./renders/NoteDeleteModal";
+
 interface Note {
   id: number;
   title: string;
@@ -29,6 +39,8 @@ export default function RealtimeTodos() {
   const [avatar_url, setAvatarUrl] = useState<string | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [noteToDeleteId, setNoteToDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTodosAndProfiles = async () => {
@@ -42,7 +54,7 @@ export default function RealtimeTodos() {
           throw todosError;
         }
         if (todosData) {
-          console.log("todos Data", todosData)
+          console.log("todos Data", todosData);
           setNotes(todosData);
         }
 
@@ -95,21 +107,42 @@ export default function RealtimeTodos() {
   }, [supabase, router]);
 
   // Определите функцию onShare в родительском компоненте
-  const handleShareNote = async (noteId: number, userId: string) => {
+  const handleShareNote = async (noteId: number, userId: string | string[]) => {
     try {
-      let { data, error } = await supabase.rpc("share_todo", {
+
+       // Extract the UUID string if userId is an array
+      const userIdString = Array.isArray(userId) ? userId[0] : userId;
+      console.log("Note ID:", noteId);
+      console.log("User ID:", userId);
+
+      // const user = supabase.auth.getUser();
+      const { data, error } = await supabase.rpc("share", {
+        // shared_by: user.id,
+        shared_to: userIdString,
         todo_id: noteId,
-        shared_to: userId,
       });
 
-      console.log("Share to do item", data);
       if (error) {
-        throw error;
+        console.error("Error sharing todo item:", error.message);
       } else {
-        console.log(data);
+        console.log("Share to do item:", data);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error sharing todo item:", error.message);
+    }
+  };
+
+  const handleDeleteNote = async (noteId: string) => {
+    try {
+      const { error } = await supabase.from("todos").delete().eq("id", noteId);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Note deleted successfully", noteId);
+    } catch (error) {
+      console.error("Error deleting note:", error.message);
     }
   };
 
@@ -141,7 +174,7 @@ export default function RealtimeTodos() {
           variant="solid"
           color="danger"
           radius="sm"
-          onClick={() => handleFilterSelect("URGENT")}
+          onClick={() => handleFilterSelect("urgent")}
         >
           URGENT
         </Button>
@@ -157,7 +190,7 @@ export default function RealtimeTodos() {
           size="sm"
           variant="ghost"
           radius="sm"
-          onClick={() => handleFilterSelect("SHIFT")}
+          onClick={() => handleFilterSelect("shift")}
         >
           SHIFT
         </Button>
@@ -165,7 +198,7 @@ export default function RealtimeTodos() {
       </div>
       <Divider />
 
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredNotes &&
           filteredNotes.length > 0 &&
           filteredNotes
@@ -180,6 +213,7 @@ export default function RealtimeTodos() {
                     (profile) => profile.id === note.user_id
                   )}
                   onShare={handleShareNote} // Добавьте этот пропс
+                  onDelete={handleDeleteNote}
                 />
               </div>
             ))}
